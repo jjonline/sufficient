@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-playground/validator/v10 v10.6.1 // indirect
 	github.com/go-redis/redis/v8 v8.8.2
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jjonline/go-mod-library/contract v1.1.0 // indirect
 	github.com/jjonline/go-mod-library/logger v1.8.2
@@ -20,4 +21,7 @@ require (
 	golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea // indirect
 	golang.org/x/text v0.3.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	golang.org/x/tools v0.1.3 // indirect
+	gorm.io/driver/mysql v1.1.0
+	gorm.io/gorm v1.21.10
 )
