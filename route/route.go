@@ -8,7 +8,7 @@ var (
 	router *gin.Engine
 )
 
-func init()  {
+func init() {
 	router = gin.New()
 	//router.Use(logger, recovery)
 	//router.NoRoute(notRoute)
