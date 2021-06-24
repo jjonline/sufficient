@@ -2,19 +2,27 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jjonline/go-mod-library/logger"
+	"github.com/jjonline/golang-backend/config"
 )
 
 var (
 	router *gin.Engine
 )
 
-func init() {
+func iniRoute() {
 	router = gin.New()
-	//router.Use(logger, recovery)
-	//router.NoRoute(notRoute)
+	router.AppEngine = true // 启用AppEngine模式; nginx反代通过`X-Appengine-Remote-Addr`头透传客户端真实IP
+
+	// set base middleware
+	router.Use(logger.GinLogger, logger.GinRecovery)
+	if config.Config.Server.Cors {
+		router.Use(logger.GinCors)
+	}
 }
 
 // Bootstrap 引导初始化路由route
 func Bootstrap() *gin.Engine {
+	iniRoute()
 	return router
 }

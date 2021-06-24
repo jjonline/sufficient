@@ -2,6 +2,7 @@ package initializer
 
 import (
 	"fmt"
+	"github.com/jjonline/go-mod-library/logger"
 	"github.com/jjonline/golang-backend/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -29,7 +30,7 @@ func initDB() *gorm.DB {
 			TablePrefix:   config.Config.Database.Prefix, // 表前缀
 			SingularTable: true,                          //关闭复数表名
 		},
-		Logger: nil, // todo
+		Logger: logger.NewGorm2Logger(),
 	})
 	if err != nil {
 		panic(fmt.Sprintf("db init open err: %s", err.Error()))
