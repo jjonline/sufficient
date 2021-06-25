@@ -1,7 +1,5 @@
 package model
 
-import "fmt"
-
 type Ad struct {
 	// ID 主键
 	ID uint32 `json:"id" gorm:"primaryKey"`
@@ -13,6 +11,5 @@ type Ad struct {
 }
 
 func (m Ad) tableName() string {
-	fmt.Println("ec_ad")
 	return "ec_ad"
 }

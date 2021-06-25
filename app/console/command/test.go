@@ -15,7 +15,7 @@ func init() {
 		Run: func(cmd *cobra.Command, args []string) {
 			// your code
 			var ad model.Ad
-			err := ad.One(11, &ad)
+			err := ad.FindByPrimary(11, &ad)
 			fmt.Println(err)
 			fmt.Println(ad)
 		},
