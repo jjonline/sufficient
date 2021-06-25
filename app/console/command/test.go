@@ -13,11 +13,17 @@ func init() {
 		Short: "测试命令", // 子命令简短说明
 		Long:  "测试命令：请在下方Run方法书写测试代码，测试代码不要提交到代码库", // 子命令完整说明
 		Run: func(cmd *cobra.Command, args []string) {
-			// your code
-			var ad model.Ad
-			err := ad.FindByPrimary(11, &ad)
+			// FindByPrimary
+			var ad model.Approval
+			err := ad.FindByPrimary(8, &ad)
 			fmt.Println(err)
 			fmt.Println(ad)
+
+			// FindByWhere
+			var ad1 model.Approval
+			err = ad1.FindByWhere([]model.Where{{"u8_user_id", "=", "02010001"}}, &ad1)
+			fmt.Println(err)
+			fmt.Println(ad1)
 		},
 	})
 }
