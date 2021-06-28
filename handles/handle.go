@@ -2,6 +2,7 @@ package handles
 
 import (
 	"database/sql"
+	"github.com/jjonline/go-mod-library/logger"
 	"gorm.io/gorm"
 	"net/http"
 
@@ -41,7 +42,7 @@ func LogErr(err error, mark string, isAlert bool) {
 
 // LogErrWithGin 记录错误日志
 func LogErrWithGin(ctx *gin.Context, err error, isAlert bool) {
-
+	logger.GinLogHttpFail(ctx, err)
 }
 
 // handle 错误处理
