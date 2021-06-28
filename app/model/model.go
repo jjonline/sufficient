@@ -15,10 +15,6 @@ type ModelIFace interface {
 
 type model struct{}
 
-func (m model) tableName() string {
-	return ""
-}
-
 // endregion
 
 // region 定义where查询条件结构
@@ -86,10 +82,7 @@ func parseWhere(query *gorm.DB, wheres []Where) *gorm.DB {
 // 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
 //	   []string{"name", "sex"}...
 func (m model) FindByPrimary(pVal interface{}, target ModelIFace, fields ...string) (err error) {
-	if len(fields) > 0 {
-		return client.DB.Table((&m).tableName()).Select(fields).Take(target, pVal).Error
-	}
-	return client.DB.Table((&m).tableName()).Take(target, pVal).Error
+	return client.DB.Table(target.tableName()).Select(fields).Take(target, pVal).Error
 }
 
 // FindByWhere 按where条件查询1条记录<若有多条记录符合要求取按主键升序的第一条记录>
@@ -101,16 +94,25 @@ func (m model) FindByPrimary(pVal interface{}, target ModelIFace, fields ...stri
 // 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
 //	   []string{"name", "sex"}...
 func (m model) FindByWhere(where []Where, target ModelIFace, fields ...string) (err error) {
-	if len(fields) > 0 {
-		return parseWhere(client.DB.Table((&m).tableName()), where).Select(fields).First(target).Error
-	}
-	return parseWhere(client.DB.Table((&m).tableName()), where).First(target).Error
+	return parseWhere(client.DB.Table(target.tableName()), where).Select(fields).First(target).Error
+}
+
+// CountByWhere 分页查询，按where条件分页查询获取分页列表数和总记录数
+//  - 查询不到记录返回返回0和空切片
+//  - model：查询的model实例对象
+// 	   例如：var a Ad 传参 a
+//  - where：查询条件 Where 结构体切片
+//  - targetTotal：查询结果集总条数指针引用
+func (m model) CountByWhere(model ModelIFace, where []Where, targetTotal *int64) (err error) {
+	return parseWhere(client.DB.Table(model.tableName()), where).Count(targetTotal).Error
 }
 
 // ListByWhere 按where条件查询多条确认数量有限的列表记录
 //	特别注意：该方法用于查询有限数量的多条记录，不设置limit条件
 //  - 查询不到记录返回 gorm.ErrRecordNotFound 的error
 // 	   使用errors.Is(result.Error, gorm.ErrRecordNotFound)进行判断
+//  - model：查询的model实例对象
+// 	   例如：var a Ad 传参 a
 //  - where：查询条件 Where 结构体切片
 //  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<ModelIFace>的切片引用：需传指针
 //     例如：var a []Ad 传参 &a
@@ -122,44 +124,110 @@ func (m model) FindByWhere(where []Where, target ModelIFace, fields ...string) (
 //  - fields：查询的字段，可选不传表示默认查询出所有字段
 // 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
 //	   []string{"name", "sex"}...
-func (m model) ListByWhere(where []Where, target interface{}, orderBy string, fields ...string) (err error) {
-	if len(fields) > 0 {
-		if orderBy == "" {
-			return parseWhere(client.DB.Table((&m).tableName()), where).Select(fields).Find(target).Error
-		}
-		return parseWhere(client.DB.Table((&m).tableName()), where).Select(fields).Order(orderBy).Find(target).Error
-	}
-
+func (m model) ListByWhere(model ModelIFace, where []Where, target interface{}, orderBy string, fields ...string) (err error) {
 	if orderBy == "" {
-		return parseWhere(client.DB.Table((&m).tableName()), where).Find(target).Error
+		return parseWhere(client.DB.Table(model.tableName()), where).Select(fields).Take(target).Error
 	}
-	return parseWhere(client.DB.Table((&m).tableName()), where).Order(orderBy).Find(target).Error
+	return parseWhere(client.DB.Table(model.tableName()), where).Select(fields).Order(orderBy).Take(target).Error
 }
 
-func (m model) Paginate(
-	where []Where,
-	target interface{},
-	targetTotal *int64,
-	page, limit int,
-	orderBy string,
-	fields ...string,
-) (err error) {
+// Paginate 分页查询，按where条件分页查询获取分页列表数和总记录数
+//  - 查询不到记录返回返回0和空切片
+//  - model：查询的model实例对象
+// 	   例如：var a Ad 传参 a
+//  - where：查询条件 Where 结构体切片
+//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<ModelIFace>的切片引用：需传指针
+//     例如：var a []Ad 传参 &a
+//  - targetTotal：查询结果集总条数指针引用
+//  - page：查询分页的当前页码数，从1开始
+//  - limit：查询分页的1页多少条限制
+//  - orderBy：排序条件字符串
+//     例子1：`name` <表示按name字段升序>
+//     例子2：`name` ASC <表示按name字段升序>
+//     例子3：`name` ASC, `ID` DESC <表示按name字段升序后按ID降序>
+//     例子4：给空字符串表示不设置排序条件
+//  - fields：查询的字段，可选不传表示默认查询出所有字段
+// 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
+//	   []string{"name", "sex"}...
+func (m model) Paginate(model ModelIFace, where []Where, target interface{}, targetTotal *int64, page, limit int, orderBy string, fields ...string) (err error) {
 	offset := 0
 	if page > 0 {
 		offset = (page - 1) * limit
 	}
 
 	// calc total count
-	_ = parseWhere(client.DB.Table(m.tableName()), where).Count(targetTotal).Error
+	_ = parseWhere(client.DB.Table(model.tableName()), where).Count(targetTotal).Error
 
-	if len(fields) > 0 {
-		if orderBy == "" {
-			return parseWhere(client.DB.Table(m.tableName()), where).Offset(offset).Limit(limit).Select(fields).Find(target).Error
-		}
-		return parseWhere(client.DB.Table(m.tableName()), where).Offset(offset).Limit(limit).Select(fields).Order(orderBy).Find(target).Error
-	}
 	if orderBy == "" {
-		return parseWhere(client.DB.Table(m.tableName()), where).Offset(offset).Limit(limit).Find(target).Error
+		return parseWhere(client.DB.Table(model.tableName()), where).Offset(offset).Limit(limit).Select(fields).Find(target).Error
 	}
-	return parseWhere(client.DB.Table(m.tableName()), where).Offset(offset).Limit(limit).Order(orderBy).Find(target).Error
+	return parseWhere(client.DB.Table(model.tableName()), where).Offset(offset).Limit(limit).Select(fields).Order(orderBy).Find(target).Error
+}
+
+// SimplePaginate 简单分页查询，按where条件分页简要查询获取分页列表数据<不返回总条数减少1次查询>
+//  - 查询不到记录返回返回空切片
+//  - model：查询的model实例对象
+// 	   例如：var a Ad 传参 a
+//  - where：查询条件 Where 结构体切片
+//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<ModelIFace>的切片引用：需传指针
+//     例如：var a []Ad 传参 &a
+//  - page：查询分页的当前页码数，从1开始
+//  - limit：查询分页的1页多少条限制
+//  - orderBy：排序条件字符串
+//     例子1：`name` <表示按name字段升序>
+//     例子2：`name` ASC <表示按name字段升序>
+//     例子3：`name` ASC, `ID` DESC <表示按name字段升序后按ID降序>
+//     例子4：给空字符串表示不设置排序条件
+//  - fields：查询的字段，可选不传表示默认查询出所有字段
+// 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
+//	   []string{"name", "sex"}...
+func (m model) SimplePaginate(model ModelIFace, where []Where, target interface{}, page, limit int, orderBy string, fields ...string) (err error) {
+	offset := 0
+	if page > 0 {
+		offset = (page - 1) * limit
+	}
+
+	if orderBy == "" {
+		return parseWhere(client.DB.Table(model.tableName()), where).Offset(offset).Limit(limit).Select(fields).Find(target).Error
+	}
+	return parseWhere(client.DB.Table(model.tableName()), where).Offset(offset).Limit(limit).Select(fields).Order(orderBy).Find(target).Error
+}
+
+// InsertOne 通过赋值模型创建1条记录
+//  - data：model实例对象，请注意不要给主键字段赋值，创建成功后主键字段将填充创建记录的主键值
+// 	   例如：var a Ad; a.XX="yy"; 传参 a
+//  - fields：限定创建语句写入的字段名，不传留空则取结构体非零字段创建1条新记录
+//	   []string{"name", "sex"}...
+func (m model) InsertOne(data ModelIFace, fields ...string) error {
+	return client.DB.Table(data.tableName()).Select(fields).Create(&data).Error
+}
+
+// InsertOneUseMap 通过map键值对创建1条记录
+//  - 注意：创建成功后不会回填主键
+//  - model：model实例对象
+// 	   例如：var a Ad; a.XX="yy"; 传参 a
+//  - data：新增1条记录的map数据
+//  - where：查询条件 Where 结构体切片
+func (m model) InsertOneUseMap(model ModelIFace, data map[string]interface{}) error {
+	return client.DB.Table(model.tableName()).Create(data).Error
+}
+
+// MultiInsert 通过赋值模型批量创建
+//  - model：model实例对象
+//  - data：model实例对象切片，请注意不要给主键字段赋值，创建成功后主键字段将填充创建记录的主键值
+// 	   例如：var a Ad; a.XX="yy"; 传参 a
+//  - fields：限定创建语句写入的字段名，不传留空则取结构体非零字段创建1条新记录
+//	   []string{"name", "sex"}...
+func (m model) MultiInsert(model ModelIFace, data interface{}, fields ...string) error {
+	return client.DB.Table(model.tableName()).Select(fields).Create(data).Error
+}
+
+// MultiInsertUseMap 通过map键值对切片批量创建
+//  - 注意：创建成功后不会回填主键
+//  - model：model实例对象
+// 	   例如：var a Ad; a.XX="yy"; 传参 a
+//  - data：新增1条记录的map数据
+//  - where：查询条件 Where 结构体切片
+func (m model) MultiInsertUseMap(model ModelIFace, data []map[string]interface{}) error {
+	return client.DB.Table(model.tableName()).Create(data).Error
 }
