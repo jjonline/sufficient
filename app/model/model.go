@@ -3,17 +3,27 @@ package model
 import (
 	"fmt"
 	"github.com/jjonline/golang-backend/client"
+	"github.com/jjonline/golang-backend/config"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
-// ModelIFace 定义公共模型接口嵌入类提供统一标准方法
-type ModelIFace interface {
-	tableName() string
+// region 定义model`基类`和基础字段结构
+
+// BaseField 通用基础字段
+type BaseField struct {
+	ID        uint `gorm:"primaryKey"`
+	CreatedAt uint `gorm:"autoCreateTime"`
+	UpdatedAt uint `gorm:"autoCreateTime,autoUpdateTime"`
+	DeletedAt uint
 }
 
-// region 定义model`基类`
-
 type model struct{}
+
+// dbPrefix 统一表前缀
+func dbPrefix() string {
+	return config.Config.Database.Prefix
+}
 
 // endregion
 
@@ -77,24 +87,24 @@ func parseWhere(query *gorm.DB, wheres []Where) *gorm.DB {
 // 	   自定义模型中主键字段通过tag标签 gorm:"primaryKey" 指定的即为主键
 // 	   若未定义主键，则取定义模型中的第一个字段作为主键字段使用
 //	   绝大多数情况下自增主键可使用；复合主键或字符串主键请使用 FindByWhere
-//  - target：查询结果集模型引用，形参为 ModelIFace 接口类型<注意：指针也是接口类型>，需传指针
+//  - target：查询结果集模型引用，形参为 schema.Tabler 接口类型<注意：指针也是接口类型>，需传指针
 //  - fields：查询的字段，可选不传表示默认查询出所有字段
 // 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
 //	   []string{"name", "sex"}...
-func (m model) FindByPrimary(pVal interface{}, target ModelIFace, fields ...string) (err error) {
-	return client.DB.Table(target.tableName()).Select(fields).Take(target, pVal).Error
+func (m model) FindByPrimary(pVal interface{}, target schema.Tabler, fields ...string) (err error) {
+	return client.DB.Table(target.TableName()).Select(fields).Take(target, pVal).Error
 }
 
 // FindByWhere 按where条件查询1条记录<若有多条记录符合要求取按主键升序的第一条记录>
 //  - 查询不到记录返回 gorm.ErrRecordNotFound 的error
 // 	   使用errors.Is(result.Error, gorm.ErrRecordNotFound)进行判断
 //  - where：查询条件 Where 结构体切片
-//  - target：查询结果集模型引用，形参为 ModelIFace 接口类型<注意：指针也是接口类型>，需传指针
+//  - target：查询结果集模型引用，形参为 schema.Tabler 接口类型<注意：指针也是接口类型>，需传指针
 //  - fields：查询的字段，可选不传表示默认查询出所有字段
 // 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
 //	   []string{"name", "sex"}...
-func (m model) FindByWhere(where []Where, target ModelIFace, fields ...string) (err error) {
-	return parseWhere(client.DB.Table(target.tableName()), where).Select(fields).First(target).Error
+func (m model) FindByWhere(where []Where, target schema.Tabler, fields ...string) (err error) {
+	return parseWhere(client.DB.Table(target.TableName()), where).Select(fields).First(target).Error
 }
 
 // CountByWhere 分页查询，按where条件分页查询获取分页列表数和总记录数
@@ -103,8 +113,8 @@ func (m model) FindByWhere(where []Where, target ModelIFace, fields ...string) (
 // 	   例如：var a Ad 传参 a
 //  - where：查询条件 Where 结构体切片
 //  - targetTotal：查询结果集总条数指针引用
-func (m model) CountByWhere(model ModelIFace, where []Where, targetTotal *int64) (err error) {
-	return parseWhere(client.DB.Table(model.tableName()), where).Count(targetTotal).Error
+func (m model) CountByWhere(model schema.Tabler, where []Where, targetTotal *int64) (err error) {
+	return parseWhere(client.DB.Table(model.TableName()), where).Count(targetTotal).Error
 }
 
 // ListByWhere 按where条件查询多条确认数量有限的列表记录
@@ -114,7 +124,7 @@ func (m model) CountByWhere(model ModelIFace, where []Where, targetTotal *int64)
 //  - model：查询的model实例对象
 // 	   例如：var a Ad 传参 a
 //  - where：查询条件 Where 结构体切片
-//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<ModelIFace>的切片引用：需传指针
+//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<schema.Tabler>的切片引用：需传指针
 //     例如：var a []Ad 传参 &a
 //  - orderBy：排序条件字符串
 //     例子1：`name` <表示按name字段升序>
@@ -124,11 +134,11 @@ func (m model) CountByWhere(model ModelIFace, where []Where, targetTotal *int64)
 //  - fields：查询的字段，可选不传表示默认查询出所有字段
 // 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
 //	   []string{"name", "sex"}...
-func (m model) ListByWhere(model ModelIFace, where []Where, target interface{}, orderBy string, fields ...string) (err error) {
+func (m model) ListByWhere(model schema.Tabler, where []Where, target interface{}, orderBy string, fields ...string) (err error) {
 	if orderBy == "" {
-		return parseWhere(client.DB.Table(model.tableName()), where).Select(fields).Take(target).Error
+		return parseWhere(client.DB.Table(model.TableName()), where).Select(fields).Take(target).Error
 	}
-	return parseWhere(client.DB.Table(model.tableName()), where).Select(fields).Order(orderBy).Take(target).Error
+	return parseWhere(client.DB.Table(model.TableName()), where).Select(fields).Order(orderBy).Take(target).Error
 }
 
 // Paginate 分页查询，按where条件分页查询获取分页列表数和总记录数
@@ -136,7 +146,7 @@ func (m model) ListByWhere(model ModelIFace, where []Where, target interface{}, 
 //  - model：查询的model实例对象
 // 	   例如：var a Ad 传参 a
 //  - where：查询条件 Where 结构体切片
-//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<ModelIFace>的切片引用：需传指针
+//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<schema.Tabler>的切片引用：需传指针
 //     例如：var a []Ad 传参 &a
 //  - targetTotal：查询结果集总条数指针引用
 //  - page：查询分页的当前页码数，从1开始
@@ -149,19 +159,19 @@ func (m model) ListByWhere(model ModelIFace, where []Where, target interface{}, 
 //  - fields：查询的字段，可选不传表示默认查询出所有字段
 // 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
 //	   []string{"name", "sex"}...
-func (m model) Paginate(model ModelIFace, where []Where, target interface{}, targetTotal *int64, page, limit int, orderBy string, fields ...string) (err error) {
+func (m model) Paginate(model schema.Tabler, where []Where, target interface{}, targetTotal *int64, page, limit int, orderBy string, fields ...string) (err error) {
 	offset := 0
 	if page > 0 {
 		offset = (page - 1) * limit
 	}
 
 	// calc total count
-	_ = parseWhere(client.DB.Table(model.tableName()), where).Count(targetTotal).Error
+	_ = parseWhere(client.DB.Table(model.TableName()), where).Count(targetTotal).Error
 
 	if orderBy == "" {
-		return parseWhere(client.DB.Table(model.tableName()), where).Offset(offset).Limit(limit).Select(fields).Find(target).Error
+		return parseWhere(client.DB.Table(model.TableName()), where).Offset(offset).Limit(limit).Select(fields).Find(target).Error
 	}
-	return parseWhere(client.DB.Table(model.tableName()), where).Offset(offset).Limit(limit).Select(fields).Order(orderBy).Find(target).Error
+	return parseWhere(client.DB.Table(model.TableName()), where).Offset(offset).Limit(limit).Select(fields).Order(orderBy).Find(target).Error
 }
 
 // SimplePaginate 简单分页查询，按where条件分页简要查询获取分页列表数据<不返回总条数减少1次查询>
@@ -169,7 +179,7 @@ func (m model) Paginate(model ModelIFace, where []Where, target interface{}, tar
 //  - model：查询的model实例对象
 // 	   例如：var a Ad 传参 a
 //  - where：查询条件 Where 结构体切片
-//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<ModelIFace>的切片引用：需传指针
+//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<schema.Tabler>的切片引用：需传指针
 //     例如：var a []Ad 传参 &a
 //  - page：查询分页的当前页码数，从1开始
 //  - limit：查询分页的1页多少条限制
@@ -181,25 +191,25 @@ func (m model) Paginate(model ModelIFace, where []Where, target interface{}, tar
 //  - fields：查询的字段，可选不传表示默认查询出所有字段
 // 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
 //	   []string{"name", "sex"}...
-func (m model) SimplePaginate(model ModelIFace, where []Where, target interface{}, page, limit int, orderBy string, fields ...string) (err error) {
+func (m model) SimplePaginate(model schema.Tabler, where []Where, target interface{}, page, limit int, orderBy string, fields ...string) (err error) {
 	offset := 0
 	if page > 0 {
 		offset = (page - 1) * limit
 	}
 
 	if orderBy == "" {
-		return parseWhere(client.DB.Table(model.tableName()), where).Offset(offset).Limit(limit).Select(fields).Find(target).Error
+		return parseWhere(client.DB.Table(model.TableName()), where).Offset(offset).Limit(limit).Select(fields).Find(target).Error
 	}
-	return parseWhere(client.DB.Table(model.tableName()), where).Offset(offset).Limit(limit).Select(fields).Order(orderBy).Find(target).Error
+	return parseWhere(client.DB.Table(model.TableName()), where).Offset(offset).Limit(limit).Select(fields).Order(orderBy).Find(target).Error
 }
 
 // InsertOne 通过赋值模型创建1条记录
 //  - data：model实例对象，请注意不要给主键字段赋值，创建成功后主键字段将填充创建记录的主键值
-// 	   例如：var a Ad; a.XX="yy"; 传参 a
-//  - fields：限定创建语句写入的字段名，不传留空则取结构体非零字段创建1条新记录
+// 	   例如：var a Ad; a.XX="yy"; 传参 &a
+//  - fields：限定创建语句写入的字段名<指定的字段的零值也会写入>，不传留空则取结构体非零字段创建1条新记录
 //	   []string{"name", "sex"}...
-func (m model) InsertOne(data ModelIFace, fields ...string) error {
-	return client.DB.Table(data.tableName()).Select(fields).Create(&data).Error
+func (m model) InsertOne(data schema.Tabler, fields ...string) error {
+	return client.DB.Table(data.TableName()).Select(fields).Create(data).Error
 }
 
 // InsertOneUseMap 通过map键值对创建1条记录
@@ -208,26 +218,48 @@ func (m model) InsertOne(data ModelIFace, fields ...string) error {
 // 	   例如：var a Ad; a.XX="yy"; 传参 a
 //  - data：新增1条记录的map数据
 //  - where：查询条件 Where 结构体切片
-func (m model) InsertOneUseMap(model ModelIFace, data map[string]interface{}) error {
-	return client.DB.Table(model.tableName()).Create(data).Error
+func (m model) InsertOneUseMap(model schema.Tabler, data map[string]interface{}) error {
+	return client.DB.Table(model.TableName()).Create(data).Error
 }
 
 // MultiInsert 通过赋值模型批量创建
 //  - model：model实例对象
 //  - data：model实例对象切片，请注意不要给主键字段赋值，创建成功后主键字段将填充创建记录的主键值
-// 	   例如：var a Ad; a.XX="yy"; 传参 a
-//  - fields：限定创建语句写入的字段名，不传留空则取结构体非零字段创建1条新记录
+// 	   例如：var a []Ad; 传参 a
+//  - fields：限定创建语句写入的字段名<指定的字段的零值也会写入>，不传留空则取结构体非零字段创建1条新记录
 //	   []string{"name", "sex"}...
-func (m model) MultiInsert(model ModelIFace, data interface{}, fields ...string) error {
-	return client.DB.Table(model.tableName()).Select(fields).Create(data).Error
+func (m model) MultiInsert(model schema.Tabler, data interface{}, fields ...string) error {
+	return client.DB.Table(model.TableName()).Select(fields).Create(data).Error
 }
 
 // MultiInsertUseMap 通过map键值对切片批量创建
 //  - 注意：创建成功后不会回填主键
 //  - model：model实例对象
 // 	   例如：var a Ad; a.XX="yy"; 传参 a
-//  - data：新增1条记录的map数据
-//  - where：查询条件 Where 结构体切片
-func (m model) MultiInsertUseMap(model ModelIFace, data []map[string]interface{}) error {
-	return client.DB.Table(model.tableName()).Create(data).Error
+//  - data：批量新增多条记录的map数据，[]map[string]interface{}类型
+func (m model) MultiInsertUseMap(model schema.Tabler, data []map[string]interface{}) error {
+	return client.DB.Table(model.TableName()).Create(data).Error
+}
+
+// UpdateOne 通过model的主键字段更新指定字段
+//  - 注意：model对象指定需要更新的单条记录的值，主键字段必须指定值
+//     然后通过第二个参数指定需要更新的字段<指定的字段的零值也会被更新为对应的零值>
+//  - model：model实例对象
+// 	   例如：var a Ad; a.ID=1;a.Name="Tom" 传参 a
+//  - fields：限定创建语句写入的字段名<指定的字段的零值也会写入>，不传留空则取结构体非零字段去更新
+//	   []string{"name", "sex"}...
+func (m model) UpdateOne(model schema.Tabler, fields ...string) (int64, error) {
+	result := client.DB.Table(model.TableName()).Select(fields).Updates(model)
+	return result.RowsAffected, result.Error
+}
+
+// UpdateByWhere 通过where条件更新记录
+//  - 注意：model对象指定需要更新的单条记录的值，主键字段必须指定值
+//     然后通过第二个参数指定需要更新的字段<指定的字段的零值也会被更新为对应的零值>
+//  - model：model实例对象
+// 	   例如：var a Ad; 传参 a 或 &a
+//  - data：更新的字段map数据，[]map[string]interface{}类型，支持零值更新
+func (m model) UpdateByWhere(model schema.Tabler, where []Where, data map[string]interface{}) (int64, error) {
+	result := parseWhere(client.DB.Table(model.TableName()), where).Updates(data)
+	return result.RowsAffected, result.Error
 }
