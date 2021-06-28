@@ -2,6 +2,7 @@ package handles
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/jjonline/go-mod-library/logger"
 	"gorm.io/gorm"
 	"net/http"
@@ -14,9 +15,9 @@ import (
 // H 格式化响应
 func H(code int, msg string, data interface{}) gin.H {
 	return gin.H{
-		"code":   code,
-		"msg":    msg,
-		"data":   data,
+		"code": code,
+		"msg":  msg,
+		"data": data,
 	}
 }
 
@@ -47,7 +48,7 @@ func LogErrWithGin(ctx *gin.Context, err error, isAlert bool) {
 
 // handle 错误处理
 func handle(err error) E {
-	if err == gorm.ErrRecordNotFound || err == sql.ErrNoRows {
+	if errors.Is(err, gorm.ErrRecordNotFound) || errors.Is(err, sql.ErrNoRows) {
 		return DbRecordNotExist.Wrap(err)
 	}
 	switch e := err.(type) {
