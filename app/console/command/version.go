@@ -2,7 +2,7 @@ package command
 
 import (
 	"fmt"
-	"github.com/jjonline/golang-backend/config"
+	"github.com/jjonline/golang-backend/conf"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ func init() {
 		Short: "显示当前版本号", // 子命令简短说明
 		Long:  "显示当前版本号", // 子命令完整说明
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println(config.Config.Server.Version)
+			fmt.Println(conf.Config.Server.Version)
 		},
 	})
 }

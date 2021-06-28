@@ -2,9 +2,9 @@ package initializer
 
 import (
 	"github.com/jjonline/go-mod-library/logger"
-	"github.com/jjonline/golang-backend/config"
+	"github.com/jjonline/golang-backend/conf"
 )
 
 func iniLogger() *logger.Logger {
-	return logger.New(config.Config.Log.Level, config.Config.Log.Path)
+	return logger.New(conf.Config.Log.Level, conf.Config.Log.Path)
 }

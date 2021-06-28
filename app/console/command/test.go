@@ -35,6 +35,22 @@ func init() {
 			}}, map[string]interface{}{"name": "updated Name once", "type": 3})
 			fmt.Println(err2)
 			fmt.Println(rows2)
+
+			res3, err3 := test2.DeleteOne(&test2, 11)
+			fmt.Println(res3)
+			fmt.Println(err3)
+
+			res4, err4 := test2.DeleteOne(&test2, "11")
+			fmt.Println(res4)
+			fmt.Println(err4)
+
+			res5, err5 := test2.DeleteByWhere(&test2, []model.Where{
+				{Field: "id",
+					Op:    ">=",
+					Value: 1},
+			})
+			fmt.Println(res5)
+			fmt.Println(err5)
 		},
 	})
 }

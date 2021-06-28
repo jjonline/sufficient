@@ -1,4 +1,4 @@
-package config
+package conf
 
 import "github.com/jjonline/golang-backend/utils/cfg"
 

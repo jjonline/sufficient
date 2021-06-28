@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/jjonline/go-mod-library/logger"
-	"github.com/jjonline/golang-backend/config"
+	"github.com/jjonline/golang-backend/conf"
 	"runtime"
 	"time"
 )
 
 func initRedis() *redis.Client {
-	cnf := config.Config.Redis
+	cnf := conf.Config.Redis
 	r := redis.NewClient(&redis.Options{
 		Network:            "tcp",
 		Addr:               fmt.Sprintf("%s:%d", cnf.Host, cnf.Port),

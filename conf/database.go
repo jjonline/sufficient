@@ -1,4 +1,4 @@
-package config
+package conf
 
 // database DB配置
 type database struct {

@@ -1,4 +1,4 @@
-package config
+package conf
 
 // server 环境、端口、版本、http读写超时等server级别的配置
 type server struct {

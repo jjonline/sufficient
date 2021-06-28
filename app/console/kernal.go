@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jjonline/golang-backend/client"
-	"github.com/jjonline/golang-backend/config"
+	"github.com/jjonline/golang-backend/conf"
 	"github.com/jjonline/golang-backend/route"
 	"github.com/jjonline/golang-backend/utils"
 	"net/http"
@@ -22,27 +22,27 @@ func BootStrap() {
 	client.Logger.Info(fmt.Sprintf("Golang Version  : %s", runtime.Version()))
 	client.Logger.Info(fmt.Sprintf("MAX Cpu Num     : %d", runtime.GOMAXPROCS(-1)))
 	client.Logger.Info(fmt.Sprintf("Command Args    : %s", os.Args))
-	client.Logger.Info(fmt.Sprintf("Log Path        : %s", config.Config.Log.Path))
+	client.Logger.Info(fmt.Sprintf("Log Path        : %s", conf.Config.Log.Path))
 
 	_, signalChan := quitCtx()
 
 	// 仅启动队列
-	if config.Cmd.OnlyQueue {
+	if conf.Cmd.OnlyQueue {
 		return
 	}
 
 	// 仅启动定时任务
-	if config.Cmd.OnlyCrontab {
+	if conf.Cmd.OnlyCrontab {
 		return
 	}
 
 	// 跟随启动队列
-	if config.Cmd.WithQueue {
+	if conf.Cmd.WithQueue {
 
 	}
 
 	// 跟随启动定时任务
-	if config.Cmd.WithCrontab {
+	if conf.Cmd.WithCrontab {
 
 	}
 	startHttpApp(signalChan)
@@ -54,10 +54,10 @@ func startHttpApp(signalChan chan os.Signal) {
 	gin.SetMode(utils.RunMode())
 
 	server := &http.Server{
-		Addr:           fmt.Sprintf(":%d", config.Config.Server.Port),
+		Addr:           fmt.Sprintf(":%d", conf.Config.Server.Port),
 		Handler:        route.Bootstrap(),
-		ReadTimeout:    time.Duration(config.Config.Server.ReadTimeout) * time.Second,
-		WriteTimeout:   time.Duration(config.Config.Server.WriteTimeout) * time.Second,
+		ReadTimeout:    time.Duration(conf.Config.Server.ReadTimeout) * time.Second,
+		WriteTimeout:   time.Duration(conf.Config.Server.WriteTimeout) * time.Second,
 		MaxHeaderBytes: 1 << 20, //1MB
 	}
 

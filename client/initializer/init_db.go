@@ -3,7 +3,7 @@ package initializer
 import (
 	"fmt"
 	"github.com/jjonline/go-mod-library/logger"
-	"github.com/jjonline/golang-backend/config"
+	"github.com/jjonline/golang-backend/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -11,7 +11,7 @@ import (
 )
 
 func initDB() *gorm.DB {
-	c := config.Config.Database
+	c := conf.Config.Database
 
 	if c.PoolMaxIdle <= 0 {
 		c.PoolMaxIdle = 2
@@ -27,8 +27,8 @@ func initDB() *gorm.DB {
 		c.User, c.Password, c.Host, c.Port, c.Database)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   config.Config.Database.Prefix, // 表前缀
-			SingularTable: true,                          //关闭复数表名
+			TablePrefix:   conf.Config.Database.Prefix, // 表前缀
+			SingularTable: true,                        //关闭复数表名
 		},
 		Logger: logger.NewGorm2Logger(),
 	})

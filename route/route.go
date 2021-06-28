@@ -3,7 +3,7 @@ package route
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jjonline/go-mod-library/logger"
-	"github.com/jjonline/golang-backend/config"
+	"github.com/jjonline/golang-backend/conf"
 )
 
 var (
@@ -16,7 +16,7 @@ func iniRoute() {
 
 	// set base middleware
 	router.Use(logger.GinLogger, logger.GinRecovery)
-	if config.Config.Server.Cors {
+	if conf.Config.Server.Cors {
 		router.Use(logger.GinCors)
 	}
 }

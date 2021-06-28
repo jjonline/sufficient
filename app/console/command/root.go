@@ -3,7 +3,7 @@ package command
 import (
 	"fmt"
 	"github.com/jjonline/golang-backend/app/console"
-	"github.com/jjonline/golang-backend/config"
+	"github.com/jjonline/golang-backend/conf"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -34,16 +34,16 @@ go run main.go customSubCmd  自定义子命令
 
 func init() {
 	// 全局配置
-	RootCmd.PersistentFlags().StringVar(&config.Cmd.ConfigFile, "config", "conf.toml", "指定本地配置文件")
-	RootCmd.PersistentFlags().StringVar(&config.Cmd.ConfigType, "configType", "toml", "指定配置文件类型")
-	RootCmd.PersistentFlags().StringVar(&config.Cmd.LogDir, "log", "stdout", "指定日志存储位置：stderr|stdout|目录路径")
-	RootCmd.PersistentFlags().StringVar(&config.Cmd.LogLevel, "logLevel", "debug", "指定日志级别：debug|info|warn|error|panic|fatal")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.ConfigFile, "config", "conf.toml", "指定本地配置文件")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.ConfigType, "configType", "toml", "指定配置文件类型")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.LogDir, "log", "stdout", "指定日志存储位置：stderr|stdout|目录路径")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.LogLevel, "logLevel", "debug", "指定日志级别：debug|info|warn|error|panic|fatal")
 
 	// 命令配置
-	RootCmd.Flags().BoolVar(&config.Cmd.WithCrontab, "withCrontab", false, "跟随启动定时任务")
-	RootCmd.Flags().BoolVar(&config.Cmd.OnlyCrontab, "onlyCrontab", false, "仅启动定时任务")
-	RootCmd.Flags().BoolVar(&config.Cmd.WithQueue, "withQueue", false, "跟随启动队列消费者服务")
-	RootCmd.Flags().BoolVar(&config.Cmd.OnlyQueue, "onlyQueue", false, "仅启动队列消费者服务")
+	RootCmd.Flags().BoolVar(&conf.Cmd.WithCrontab, "withCrontab", false, "跟随启动定时任务")
+	RootCmd.Flags().BoolVar(&conf.Cmd.OnlyCrontab, "onlyCrontab", false, "仅启动定时任务")
+	RootCmd.Flags().BoolVar(&conf.Cmd.WithQueue, "withQueue", false, "跟随启动队列消费者服务")
+	RootCmd.Flags().BoolVar(&conf.Cmd.OnlyQueue, "onlyQueue", false, "仅启动队列消费者服务")
 }
 
 // Start 启动应用

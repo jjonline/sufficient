@@ -3,7 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/jjonline/golang-backend/client"
-	"github.com/jjonline/golang-backend/config"
+	"github.com/jjonline/golang-backend/conf"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )
@@ -22,7 +22,7 @@ type model struct{}
 
 // dbPrefix 统一表前缀
 func dbPrefix() string {
-	return config.Config.Database.Prefix
+	return conf.Config.Database.Prefix
 }
 
 // endregion
@@ -245,7 +245,7 @@ func (m model) MultiInsertUseMap(model schema.Tabler, data []map[string]interfac
 //  - 注意：model对象指定需要更新的单条记录的值，主键字段必须指定值
 //     然后通过第二个参数指定需要更新的字段<指定的字段的零值也会被更新为对应的零值>
 //  - model：model实例对象
-// 	   例如：var a Ad; a.ID=1;a.Name="Tom" 传参 a
+// 	   例如：var a Ad; a.ID=1;a.Name="Tom" 传参 &a
 //  - fields：限定创建语句写入的字段名<指定的字段的零值也会写入>，不传留空则取结构体非零字段去更新
 //	   []string{"name", "sex"}...
 func (m model) UpdateOne(model schema.Tabler, fields ...string) (int64, error) {
@@ -258,8 +258,37 @@ func (m model) UpdateOne(model schema.Tabler, fields ...string) (int64, error) {
 //     然后通过第二个参数指定需要更新的字段<指定的字段的零值也会被更新为对应的零值>
 //  - model：model实例对象
 // 	   例如：var a Ad; 传参 a 或 &a
+//  - where：查询条件 Where 结构体切片
 //  - data：更新的字段map数据，[]map[string]interface{}类型，支持零值更新
 func (m model) UpdateByWhere(model schema.Tabler, where []Where, data map[string]interface{}) (int64, error) {
 	result := parseWhere(client.DB.Table(model.TableName()), where).Updates(data)
+	return result.RowsAffected, result.Error
+}
+
+// DeleteOne 通过主键字段值删除1条或多条记录
+//  - 注意：model对象指定需要删除的记录的主键值
+//     gorm软删除特性需在model字段定义时使用 gorm.DeletedAt 类型的字段特性实现
+//     gorm软删除特性引入后查询条件将自动附加过滤已软删除记录的条件
+//  - model：model实例对象
+// 	   例如：var a Ad; 传参 &a
+//  - primaryKey：数值类型的主键值，1个或多个
+// 	   例子1：1 单个主键
+//     例子2："1" 单个主键字符串类型字面量，本质是个数值
+//     例子3：1,3,4 多个数值类型<多个需要相同类型>
+//     例子4："1","3","4" 多个数值字符串<多个需要相同类型>
+func (m model) DeleteOne(model schema.Tabler, primaryKey ...interface{}) (int64, error) {
+	result := client.DB.Table(model.TableName()).Delete(model, primaryKey)
+	return result.RowsAffected, result.Error
+}
+
+// DeleteByWhere 通过model的主键字段删除1条记录
+//  - 注意：软删除功能是一项功能特性，要么全部使用gorm的软删除特性，要么业务删除时调用update方法
+//     gorm软删除特性需在model字段定义时使用 gorm.DeletedAt 类型的字段特性实现
+//     gorm软删除特性引入后查询条件将自动附加过滤已软删除记录的条件，无需手动指定
+//  - model：model实例对象
+// 	   例如：var a Ad; 传参 &a
+//  - where：条件 Where 结构体切片
+func (m model) DeleteByWhere(model schema.Tabler, where []Where) (int64, error) {
+	result := parseWhere(client.DB.Table(model.TableName()), where).Delete(model)
 	return result.RowsAffected, result.Error
 }

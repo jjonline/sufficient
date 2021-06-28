@@ -1,4 +1,4 @@
-package config
+package conf
 
 // redis redis config
 type redis struct {
