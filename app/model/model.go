@@ -265,7 +265,7 @@ func (m model) UpdateByWhere(model schema.Tabler, where []Where, data map[string
 	return result.RowsAffected, result.Error
 }
 
-// DeleteOne 通过主键字段值删除1条或多条记录
+// DeleteByPrimary 通过主键字段值删除1条或多条记录
 //  - 注意：model对象指定需要删除的记录的主键值
 //     gorm软删除特性需在model字段定义时使用 gorm.DeletedAt 类型的字段特性实现
 //     gorm软删除特性引入后查询条件将自动附加过滤已软删除记录的条件
@@ -276,7 +276,7 @@ func (m model) UpdateByWhere(model schema.Tabler, where []Where, data map[string
 //     例子2："1" 单个主键字符串类型字面量，本质是个数值
 //     例子3：1,3,4 多个数值类型<多个需要相同类型>
 //     例子4："1","3","4" 多个数值字符串<多个需要相同类型>
-func (m model) DeleteOne(model schema.Tabler, primaryKey ...interface{}) (int64, error) {
+func (m model) DeleteByPrimary(model schema.Tabler, primaryKey ...interface{}) (int64, error) {
 	result := client.DB.Table(model.TableName()).Delete(model, primaryKey)
 	return result.RowsAffected, result.Error
 }
