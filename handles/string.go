@@ -10,32 +10,31 @@ func _() {
 	var x [1]struct{}
 	_ = x[UnknownError - -1]
 	_ = x[DbError-100001]
-	_ = x[EsError-100002]
-	_ = x[AwsError-100003]
-	_ = x[RedisError-100004]
+	_ = x[RedisError-100002]
+	_ = x[LostConnectionError-100003]
 	_ = x[InvalidParams-101001]
-	_ = x[PlatformParseFailed-101002]
+	_ = x[InvalidRequest-101002]
 	_ = x[SystemBusy-101003]
 	_ = x[DbRecordNotExist-101404]
 }
 
 const (
-	_CE_name_0 = "未知錯誤"
-	_CE_name_1 = "系統錯誤系統錯誤系統錯誤系統錯誤"
-	_CE_name_2 = "請求參數錯誤請求不合法系統繁忙，請稍後重試"
-	_CE_name_3 = "數據不存在"
+	_CE_name_0 = "未知错误"
+	_CE_name_1 = "系统错误系统错误系统错误"
+	_CE_name_2 = "请求参数错误请求错误系统繁忙请稍后再试"
+	_CE_name_3 = "数据不存在"
 )
 
 var (
-	_CE_index_1 = [...]uint8{0, 12, 24, 36, 48}
-	_CE_index_2 = [...]uint8{0, 18, 33, 63}
+	_CE_index_1 = [...]uint8{0, 12, 24, 36}
+	_CE_index_2 = [...]uint8{0, 18, 30, 57}
 )
 
 func (i CE) String() string {
 	switch {
 	case i == -1:
 		return _CE_name_0
-	case 100001 <= i && i <= 100004:
+	case 100001 <= i && i <= 100003:
 		i -= 100001
 		return _CE_name_1[_CE_index_1[i]:_CE_index_1[i+1]]
 	case 101001 <= i && i <= 101003:
