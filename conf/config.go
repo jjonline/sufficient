@@ -1,6 +1,8 @@
 package conf
 
-import "github.com/jjonline/golang-backend/utils/cfg"
+import (
+	"github.com/jjonline/golang-backend/utils/cfg"
+)
 
 // 项目config配置定义
 
@@ -22,8 +24,8 @@ type config struct {
 type cmdConfig struct {
 	ConfigFile  string // 命令行指定配置文件
 	ConfigType  string // 命令行指定配置文件类型
-	LogPath     string // 命令行指定日志文件，优先级高于配置文件
-	LogLevel    string // 命令行指定日志级别，优先级高于配置文件
+	Path        string // 命令行指定日志文件，优先级高于配置文件
+	Level       string // 命令行指定日志级别，优先级高于配置文件
 	OnlyQueue   bool   // 命令行指定仅启动队列
 	WithQueue   bool   // 命令行指定跟随启动队列
 	OnlyCrontab bool   // 命令行指定仅启动定时任务
@@ -32,7 +34,15 @@ type cmdConfig struct {
 
 // parseAfterLoad 配置项加载完成后的统一处理流程逻辑
 func (c config) parseAfterLoad() {
-	// here add your code
+	// ①、命令行的日志路径 & 日志级别高于配置文件
+	if Cmd.Path != DefaultLogPath {
+		Config.Log.Path = Cmd.Path
+	}
+	if Cmd.Level != DefaultLogLevel {
+		Config.Log.Level = Cmd.Level
+	}
+
+	// ②、Url后缀斜杠处理，配置写法里带不带斜杠不影响代码使用
 }
 
 // region 初始化

@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 	"github.com/jjonline/golang-backend/app/console"
+	"github.com/jjonline/golang-backend/client/initializer"
 	"github.com/jjonline/golang-backend/conf"
 	"github.com/spf13/cobra"
 	"os"
@@ -20,6 +21,8 @@ go run main.go --withQueue   启动基础api服务的同时启动队列消费者
 go run main.go --withCrontab 启动基础api服务的同时启动定时服务
 go run main.go --onlyQueue   不启动基础api服务仅启动队列消费者服务
 go run main.go --onlyCrontab 不启动基础api服务仅启动队定定时任务
+go run main.go --log=stderr  命令行参数指定优先级高于配置文件的日志路径
+go run main.go --level=info  命令行参数指定优先级高于配置文件的日志级别
 go run main.go customSubCmd  自定义子命令
 ----------------------------------------------------------------------
 编译后的二进制文件请更换上述"go run main.go"为对应可执行二进制文件名即可`,
@@ -27,6 +30,12 @@ go run main.go customSubCmd  自定义子命令
 			console.BootStrap()
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			// step1、init config
+			conf.Init()
+
+			// step2、init global client handle
+			initializer.Init()
+
 			return nil
 		},
 	}
@@ -36,8 +45,8 @@ func init() {
 	// 全局配置
 	RootCmd.PersistentFlags().StringVar(&conf.Cmd.ConfigFile, "config", "conf.toml", "指定本地配置文件")
 	RootCmd.PersistentFlags().StringVar(&conf.Cmd.ConfigType, "configType", "toml", "指定配置文件类型")
-	RootCmd.PersistentFlags().StringVar(&conf.Cmd.LogPath, "log", conf.DefaultLogPath, "指定日志存储位置：stderr|stdout|目录路径")
-	RootCmd.PersistentFlags().StringVar(&conf.Cmd.LogLevel, "logLevel", conf.DefaultLogLevel, "指定日志级别：debug|info|warn|error|panic|fatal")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.Path, "log", conf.DefaultLogPath, "指定日志存储位置：stderr|stdout|目录路径")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.Level, "level", conf.DefaultLogLevel, "指定日志级别：debug|info|warn|error|panic|fatal")
 
 	// 命令配置
 	RootCmd.Flags().BoolVar(&conf.Cmd.WithCrontab, "withCrontab", false, "跟随启动定时任务")
