@@ -79,7 +79,7 @@ func handle(err error) E {
 
 // CauseByLostConnection 字符串匹配方式检查是否为断开连接导致出错
 func CauseByLostConnection(err error) bool {
-	if "" == err.Error() {
+	if err == nil || "" == err.Error() {
 		return false
 	}
 

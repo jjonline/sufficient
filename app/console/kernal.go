@@ -50,7 +50,7 @@ func BootStrap() {
 
 // startHttpApp http api服务启动
 func startHttpApp(signalChan chan os.Signal) {
-	// 启动模式
+	// 设置gin启动模式
 	gin.SetMode(utils.RunMode())
 
 	server := &http.Server{
@@ -60,6 +60,10 @@ func startHttpApp(signalChan chan os.Signal) {
 		WriteTimeout:   time.Duration(conf.Config.Server.WriteTimeout) * time.Second,
 		MaxHeaderBytes: 1 << 20, //1MB
 	}
+
+	// region main主进程阻塞channel
+	idleCloser := make(chan struct{})
+	// endregion
 
 	// http serv handle exit signal
 	go func() {
@@ -77,18 +81,19 @@ func startHttpApp(signalChan chan os.Signal) {
 			// successful shutdown process ok
 			client.Logger.Info("Http服务优雅停止")
 		}
+
 		// closer quit chan
-		close(signalChan)
+		close(idleCloser)
 	}()
 
 	// continue serv http service
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		client.Logger.Error("Http服务异常：" + err.Error())
-		close(signalChan)
+		close(idleCloser)
 	}
 
 	// wait for stop main process
-	<-signalChan
+	<-idleCloser
 	client.Logger.Info("进程已退出：服务已关闭")
 }
 
