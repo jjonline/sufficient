@@ -22,7 +22,7 @@ type config struct {
 type cmdConfig struct {
 	ConfigFile  string // 命令行指定配置文件
 	ConfigType  string // 命令行指定配置文件类型
-	LogDir      string // 命令行指定日志文件，优先级高于配置文件
+	LogPath     string // 命令行指定日志文件，优先级高于配置文件
 	LogLevel    string // 命令行指定日志级别，优先级高于配置文件
 	OnlyQueue   bool   // 命令行指定仅启动队列
 	WithQueue   bool   // 命令行指定跟随启动队列

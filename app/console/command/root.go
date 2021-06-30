@@ -36,8 +36,8 @@ func init() {
 	// 全局配置
 	RootCmd.PersistentFlags().StringVar(&conf.Cmd.ConfigFile, "config", "conf.toml", "指定本地配置文件")
 	RootCmd.PersistentFlags().StringVar(&conf.Cmd.ConfigType, "configType", "toml", "指定配置文件类型")
-	RootCmd.PersistentFlags().StringVar(&conf.Cmd.LogDir, "log", "stdout", "指定日志存储位置：stderr|stdout|目录路径")
-	RootCmd.PersistentFlags().StringVar(&conf.Cmd.LogLevel, "logLevel", "debug", "指定日志级别：debug|info|warn|error|panic|fatal")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.LogPath, "log", conf.DefaultLogPath, "指定日志存储位置：stderr|stdout|目录路径")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.LogLevel, "logLevel", conf.DefaultLogLevel, "指定日志级别：debug|info|warn|error|panic|fatal")
 
 	// 命令配置
 	RootCmd.Flags().BoolVar(&conf.Cmd.WithCrontab, "withCrontab", false, "跟随启动定时任务")
