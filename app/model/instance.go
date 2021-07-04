@@ -1,7 +1,11 @@
 package model
 
-// 此文件定义所有模型的<单例>实例：体现在语言层面则是定义模型对应的结构体变量
-
+// 定义所有模型实例的单例，模型变量
 var (
 	TestModel Test
 )
+
+// init 模型初始化，设置通用方法依赖的模型本身
+func init() {
+	TestModel.model.construct(&TestModel)
+}
