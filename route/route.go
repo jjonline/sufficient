@@ -6,9 +6,9 @@ import (
 	"github.com/jjonline/golang-backend/conf"
 )
 
-var (
-	router *gin.Engine
-)
+// router 包内路由变量，请勿覆盖
+//  - 一般扩展路由是基于该变量链式添加，为了识别可将固定前缀的路由拆分文件
+var router *gin.Engine
 
 func iniRoute() {
 	router = gin.New()

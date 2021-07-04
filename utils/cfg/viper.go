@@ -10,10 +10,10 @@ import (
 // viper支持的格式见包内常量
 type Viper struct{}
 
-// Parse
-// @param resource 文件路径（string） 或 配置资源（[]byte）
-// @param cType    配置文件类型：请使用包内常量
-// @param target   解析结果集引用（struct pointer）
+// Parse 解析映射配置至结构体变量
+//  - @param resource 文件路径（string） 或 配置资源（[]byte）
+//  - @param cType    配置文件类型：请使用包内Type开头的常量，例如： TypeToml
+//  - @param target   解析结果集引用（struct pointer）
 func (v Viper) Parse(resource interface{}, cType string, target interface{}) error {
 	if !IsCfgTypeSupport(cType) {
 		return ConfigTypeNotSupport
