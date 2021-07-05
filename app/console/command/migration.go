@@ -55,11 +55,10 @@ func init() {
 }
 
 func getMigration() *migrate.Migrate {
-	dbConf := conf.Config.Database
 	dbHandle, _ := client.DB.DB()
 	return migrate.New(migrate.Config{
 		Dir:       "migrations",
-		TableName: fmt.Sprintf("%smigrations", dbConf.Prefix),
+		TableName: fmt.Sprintf("%smigrations", conf.Config.Database.Prefix),
 		DB:        dbHandle,
 	})
 }
