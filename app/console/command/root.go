@@ -5,6 +5,7 @@ import (
 	"github.com/jjonline/golang-backend/app/console"
 	"github.com/jjonline/golang-backend/client/initializer"
 	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/golang-backend/define"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -45,8 +46,8 @@ func init() {
 	// 全局配置
 	RootCmd.PersistentFlags().StringVar(&conf.Cmd.ConfigFile, "config", "conf.toml", "指定本地配置文件")
 	RootCmd.PersistentFlags().StringVar(&conf.Cmd.ConfigType, "configType", "toml", "指定配置文件类型")
-	RootCmd.PersistentFlags().StringVar(&conf.Cmd.Path, "log", conf.DefaultLogPath, "指定优先级高于配置文件的日志存储位置：stderr|stdout|目录路径")
-	RootCmd.PersistentFlags().StringVar(&conf.Cmd.Level, "level", conf.DefaultLogLevel, "指定优先级高于配置文件的日志级别：debug|info|warn|error|panic|fatal")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.Path, "log", define.DefaultLogPath, "指定优先级高于配置文件的日志存储位置：stderr|stdout|目录路径")
+	RootCmd.PersistentFlags().StringVar(&conf.Cmd.Level, "level", define.DefaultLogLevel, "指定优先级高于配置文件的日志级别：debug|info|warn|error|panic|fatal")
 
 	// 命令配置
 	RootCmd.Flags().BoolVar(&conf.Cmd.WithCrontab, "withCrontab", false, "跟随启动定时任务")

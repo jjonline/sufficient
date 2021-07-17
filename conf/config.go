@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"github.com/jjonline/golang-backend/define"
 	"github.com/jjonline/golang-backend/utils/cfg"
 )
 
@@ -35,10 +36,10 @@ type cmdConfig struct {
 // parseAfterLoad 配置项加载完成后的统一处理流程逻辑
 func (c config) parseAfterLoad() {
 	// ①、命令行的日志路径 & 日志级别高于配置文件
-	if Cmd.Path != DefaultLogPath {
+	if Cmd.Path != define.DefaultLogPath {
 		Config.Log.Path = Cmd.Path
 	}
-	if Cmd.Level != DefaultLogLevel {
+	if Cmd.Level != define.DefaultLogLevel {
 		Config.Log.Level = Cmd.Level
 	}
 
