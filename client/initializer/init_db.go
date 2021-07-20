@@ -2,7 +2,7 @@ package initializer
 
 import (
 	"fmt"
-	"github.com/jjonline/go-mod-library/logger"
+	"github.com/jjonline/go-lib-backend/logger"
 	"github.com/jjonline/golang-backend/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

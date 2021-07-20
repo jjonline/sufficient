@@ -7,8 +7,8 @@ require (
 	github.com/go-playground/validator/v10 v10.6.1 // indirect
 	github.com/go-redis/redis/v8 v8.8.3
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/jjonline/go-mod-library/logger v1.8.5
-	github.com/jjonline/go-mod-library/migrate v0.0.1
+	github.com/jjonline/go-lib-backend/logger v0.0.0-20210720014741-ee748420702a
+	github.com/jjonline/go-lib-backend/migrate v0.0.0-20210720014741-ee748420702a
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/spf13/cobra v1.2.1
@@ -19,5 +19,5 @@ require (
 	golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea // indirect
 	golang.org/x/text v0.3.6 // indirect
 	gorm.io/driver/mysql v1.1.0
-	gorm.io/gorm v1.21.11
+	gorm.io/gorm v1.21.12
 )

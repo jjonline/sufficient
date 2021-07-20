@@ -4,7 +4,7 @@ package client
 
 import (
 	"github.com/go-redis/redis/v8"
-	"github.com/jjonline/go-mod-library/logger"
+	"github.com/jjonline/go-lib-backend/logger"
 	"gorm.io/gorm"
 )
 

@@ -2,7 +2,7 @@ package command
 
 import (
 	"fmt"
-	"github.com/jjonline/go-mod-library/migrate"
+	"github.com/jjonline/go-lib-backend/migrate"
 	"github.com/jjonline/golang-backend/client"
 	"github.com/jjonline/golang-backend/conf"
 	"github.com/spf13/cobra"
