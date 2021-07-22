@@ -195,10 +195,10 @@ github.com/jinzhu/inflection v1.0.0 h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD
 github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc=
 github.com/jinzhu/now v1.1.2 h1:eVKgfIdy9b6zbWBMgFpfDPoAMifwSZagU9HmEU6zgiI=
 github.com/jinzhu/now v1.1.2/go.mod h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=
-github.com/jjonline/go-lib-backend/logger v0.0.0-20210720014741-ee748420702a h1:N/W71Ng94KSmjd91IDzfJib6MBOTcVZUpyE8TwDqQZc=
-github.com/jjonline/go-lib-backend/logger v0.0.0-20210720014741-ee748420702a/go.mod h1:yTTDu7t1F/SRDmMvmvX4B3D2mAP5JBlEnCTPf3ImrjI=
-github.com/jjonline/go-lib-backend/migrate v0.0.0-20210720014741-ee748420702a h1:HyQg7CMzdUFJjiUeQbUzt3gDAYmUZX5WFl4hi7Bg27o=
-github.com/jjonline/go-lib-backend/migrate v0.0.0-20210720014741-ee748420702a/go.mod h1:uakDgpXOjvzE/s7vcr/nhwydkCGAXOTquRTU/uzgnUk=
+github.com/jjonline/go-lib-backend/logger v0.0.0-20210722035629-e1bc68006229 h1:L0KbLAlzcMZh1GFnWieB1zBfQ3rPu31wEjhdTi4DnKM=
+github.com/jjonline/go-lib-backend/logger v0.0.0-20210722035629-e1bc68006229/go.mod h1:yTTDu7t1F/SRDmMvmvX4B3D2mAP5JBlEnCTPf3ImrjI=
+github.com/jjonline/go-lib-backend/migrate v0.0.0-20210722035629-e1bc68006229 h1:VE9BOLUY24WXH0BUMmAi85bc97NnTwA0/OcYxSn6niM=
+github.com/jjonline/go-lib-backend/migrate v0.0.0-20210722035629-e1bc68006229/go.mod h1:uakDgpXOjvzE/s7vcr/nhwydkCGAXOTquRTU/uzgnUk=
 github.com/json-iterator/go v1.1.9/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/json-iterator/go v1.1.11 h1:uVUAXhF2To8cbw/3xN3pxj6kk7TYKs98NIrTqPlMWAQ=
 github.com/json-iterator/go v1.1.11/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
