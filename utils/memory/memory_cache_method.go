@@ -2,7 +2,7 @@ package memory
 
 import (
 	"fmt"
-	"github.com/jjonline/go-lib-backend/memory"
+	memCache "github.com/jjonline/go-lib-backend/memory"
 	"github.com/jjonline/golang-backend/client"
 	"reflect"
 	"time"
@@ -47,7 +47,7 @@ func Set(key string, data interface{}, timeout time.Duration) error {
 
 	// 过期时间设置为0或负数即不过期
 	if timeout <= 0 {
-		timeout = memory.NoExpiration
+		timeout = memCache.NoExpiration
 	}
 	client.MemoryCache.Set(key, data, timeout)
 	return nil
