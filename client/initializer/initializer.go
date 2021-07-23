@@ -6,9 +6,10 @@ import "github.com/jjonline/golang-backend/client"
 
 // Init 初始化
 func Init() {
-	client.Logger = iniLogger() // 初始化logger，需要优先执行
-	client.Redis = initRedis()  // 初始化redis
-	client.DB = initDB()        // 初始化db，内部操作不允许重新赋值，除非清楚您知道现在找干什么！！！
+	client.Logger = iniLogger()            // 初始化logger，需要优先执行
+	client.Redis = initRedis()             // 初始化redis
+	client.DB = initDB()                   // 初始化db
+	client.MemoryCache = initMemoryCache() // 初始化内存缓存
 }
 
 // endregion
