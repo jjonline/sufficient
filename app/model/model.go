@@ -151,6 +151,22 @@ func (m *model) ListByWhere(ctx context.Context, where []Where, target interface
 	return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Select(fields).Order(orderBy).Take(target).Error
 }
 
+// Columns 获取列数据
+//  - where：查询条件 Where 结构体切片
+//  - target：查询结果集切片引用，形参为 interface，例如: var a []uint32 \ var b []string 则传参 &a \ &b
+//  - fields：查询的单个字段列名称
+//  - orderBy：排序条件字符串
+//     例子1：`name` <表示按name字段升序>
+//     例子2：`name` ASC <表示按name字段升序>
+//     例子3：`name` ASC, `ID` DESC <表示按name字段升序后按ID降序>
+//     例子4：给空字符串表示不设置排序条件
+func (m *model) Columns(ctx context.Context, where []Where, target interface{}, field string, orderBy string) error {
+	if orderBy == "" {
+		return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Pluck(field, target).Error
+	}
+	return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Order(orderBy).Pluck(field, target).Error
+}
+
 // Paginate 分页查询，按where条件分页查询获取分页列表数和总记录数
 //  - 查询不到记录返回返回0和空切片
 //  - where：查询条件 Where 结构体切片
