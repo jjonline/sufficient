@@ -11,6 +11,17 @@ import (
 
 // region 定义model`基类`和基础字段结构
 
+// 定义Where条件常量便于IDE追踪
+const (
+	In         = "IN"
+	NotIn      = "NOT IN"
+	Between    = "BETWEEN"
+	NotBetween = "NOT BETWEEN"
+	Like       = "LIKE"
+	FindINSet  = "FIND_IN_SET"
+	Raw        = "RAW"
+)
+
 // BaseField 通用基础字段
 type BaseField struct {
 	ID        uint `gorm:"primaryKey"`
@@ -31,7 +42,7 @@ func dbPrefix() string {
 // Where 定义where查询条件
 //  切片Where多个条件最终SQL中将使用 AND 符拼接
 //  - Field 查询的字段名称字符串
-//  - Op    查询的条件[IN、NOT IN、BETWEEN、NOT BETWEEN、LIKE、FIND_IN_SET、=、<>、>=、<、<=、RAW]
+//  - Op    查询的条件符号，建议使用包内常量，全部大写[IN、NOT IN、BETWEEN、NOT BETWEEN、LIKE、FIND_IN_SET、=、<>、>=、<、<=、RAW等]
 //    当使用RAW时将忽略Op值，直接使用gorm提供的原生Where方法构建<注意转义特殊字符特别留意SQL注入风险>
 //  - Value 查询的条件值，当Op为LIKE时无需添加前后的百分号<%>，方法体自动添加前后百分号
 type Where struct {
@@ -43,21 +54,21 @@ type Where struct {
 // toWhere 将where传给db查询构造器
 func (w Where) toWhere(query *gorm.DB) *gorm.DB {
 	switch w.Op {
-	case "IN":
+	case In:
 		query = query.Where(fmt.Sprintf("`%s` IN (?)", w.Field), w.Value)
-	case "NOT IN":
+	case NotIn:
 		query = query.Where(fmt.Sprintf("`%s` NOT IN (?)", w.Field), w.Value)
-	case "BETWEEN":
+	case Between:
 		v := w.Value.([]interface{})
 		query = query.Where(fmt.Sprintf("`%s` BETWEEN ? AND ?", w.Field), v[0], v[1])
-	case "NOT BETWEEN":
+	case NotBetween:
 		v := w.Value.([]interface{})
 		query = query.Where(fmt.Sprintf("`%s` NOT BETWEEN ? AND ?", w.Field), v[0], v[1])
-	case "LIKE":
+	case Like:
 		query = query.Where(fmt.Sprintf("`%s` LIKE ?", w.Field), "%"+w.Value.(string)+"%")
-	case "FIND_IN_SET":
+	case FindINSet:
 		query = query.Where(fmt.Sprintf("FIND_IN_SET(?, %s)", w.Field), w.Value)
-	case "RAW":
+	case Raw:
 		query = query.Where(w.Field, w.Value.([]interface{})...)
 	default:
 		// "<>", "!=", ">", ">=", "=", "<", "<="
