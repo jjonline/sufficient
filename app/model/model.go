@@ -13,13 +13,19 @@ import (
 
 // 定义Where条件常量便于IDE追踪
 const (
-	In         = "IN"
-	NotIn      = "NOT IN"
-	Between    = "BETWEEN"
-	NotBetween = "NOT BETWEEN"
-	Like       = "LIKE"
-	FindINSet  = "FIND_IN_SET"
-	Raw        = "RAW"
+	In         = "IN"          // 在指定枚举值范围内
+	NotIn      = "NOT IN"      // 不在指定枚举值范围内
+	Between    = "BETWEEN"     // 在指定范围内
+	NotBetween = "NOT BETWEEN" // 不在指定范围内
+	Like       = "LIKE"        // 模糊查询like
+	FindINSet  = "FIND_IN_SET" // find in set
+	Raw        = "RAW"         // 原样输出
+	EQ         = "="           // equal 等于<=>
+	NEQ        = "<>"          // not equal 不等于(!=、<>)
+	GT         = ">"           // greater than 大于
+	GTE        = ">="          // greater than or equal 大于等于
+	LT         = "<"           // less than 小于
+	LTE        = "<"           // less than or equal 小于等于
 )
 
 // BaseField 通用基础字段
