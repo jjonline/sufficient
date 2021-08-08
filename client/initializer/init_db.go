@@ -28,9 +28,11 @@ func initDB() *gorm.DB {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   conf.Config.Database.Prefix, // 表前缀
-			SingularTable: true,                        //关闭复数表名
+			SingularTable: true,                        // 关闭复数表名
 		},
-		Logger: logger.NewGorm2Logger(),
+		PrepareStmt:            true,                    // 启用预编译
+		SkipDefaultTransaction: true,                    // 对于写操作（创建、更新、删除）禁用默认事务
+		Logger:                 logger.NewGorm2Logger(), // 自定义logger
 	})
 	if err != nil {
 		panic(fmt.Sprintf("db init open err: %s", err.Error()))
