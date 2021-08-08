@@ -168,6 +168,35 @@ func (m *model) ListByWhere(ctx context.Context, where []Where, target interface
 	return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Select(fields).Order(orderBy).Take(target).Error
 }
 
+// ListByOriginWhere 按gorm原始where查询多条确认数量有限的列表记录
+//  ①、可用于构造查询条件较为复杂的SQL，包括查询条件包含or、and以及使用括号连起来的分组条件
+//     例如：select * from tb where (id=1 OR name="tom") OR ((sex=0 OR title="leader") AND dept_id=10)
+//	②、特别注意：该方法用于查询有限数量的多条记录，不设置limit条件
+//  - 查询不到记录返回 gorm.ErrRecordNotFound 的error
+// 	   使用errors.Is(result.Error, gorm.ErrRecordNotFound)进行判断
+//  - originWhere：gorm原始查询条件，使用gorm全局句柄构建，参考下方例子伪代码构造
+//  - target：查询结果集模型的切片引用，形参为 interface，需要传具体model实现<schema.Tabler>的切片引用：需传指针
+//     例如：var a []Ad 传参 &a
+//  - orderBy：排序条件字符串
+//     例子1：`name` <表示按name字段升序>
+//     例子2：`name` ASC <表示按name字段升序>
+//     例子3：`name` ASC, `ID` DESC <表示按name字段升序后按ID降序>
+//     例子4：给空字符串表示不设置排序条件
+//  - fields：查询的字段，可选不传表示默认查询出所有字段
+// 	   可变参数查询多个字段，使用字符串切片可变参数展开模式可使用字符串切片数组
+//	   []string{"name", "sex"}...
+//  例如上述列出SQL的伪代码(注意gg即为originWhere，由g1、g2组合构成)：
+//     g1 := client.DB.Where("id=?", 1).Or("name=?", "tom")
+//     g2 := client.DB.Where(client.DB.Where("sex=?", 0).Or("title=?", "leader")).Where("dept_id=?", 10)
+//     gg := client.DB.Where(g1).Or(g2)
+//     err := tbModel.ListByOriginWhere(ctx, gg, &target, "id")
+func (m *model) ListByOriginWhere(ctx context.Context, originWhere *gorm.DB, target interface{}, orderBy string, fields ...string) (err error) {
+	if orderBy == "" {
+		return client.DB.WithContext(ctx).Table(m.self.TableName()).Where(originWhere).Select(fields).Take(target).Error
+	}
+	return client.DB.WithContext(ctx).Table(m.self.TableName()).Where(originWhere).Select(fields).Order(orderBy).Take(target).Error
+}
+
 // Columns 获取列数据
 //  - where：查询条件 Where 结构体切片
 //  - target：查询结果集切片引用，形参为 interface，例如: var a []uint32 \ var b []string 则传参 &a \ &b
