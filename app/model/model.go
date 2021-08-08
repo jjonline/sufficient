@@ -253,14 +253,14 @@ func (m *model) InsertOne(ctx context.Context, data schema.Tabler, fields ...str
 
 // InsertOneUseMap 通过map键值对创建1条记录
 //  - 注意：创建成功后不会回填主键
-//  - data：新增1条记录的map数据
+//  - data：新增1条记录的map数据，注意map的键为数据库实际字段名而不是结构体FieldName，支持零值
 func (m *model) InsertOneUseMap(ctx context.Context, data map[string]interface{}) error {
 	return client.DB.WithContext(ctx).Table(m.self.TableName()).Create(data).Error
 }
 
 // MultiInsert 通过赋值模型批量创建
 //  - data：model实例对象切片，请注意不要给主键字段赋值，创建成功后主键字段将填充创建记录的主键值
-// 	   例如：var a []Ad; 传参 a
+// 	   例如：var a []Ad; 传参 &a
 //  - fields：限定创建语句写入的字段名<指定的字段的零值也会写入>，不传留空则取结构体非零字段创建1条新记录
 //	   []string{"name", "sex"}...
 func (m *model) MultiInsert(ctx context.Context, data interface{}, fields ...string) error {
@@ -269,7 +269,7 @@ func (m *model) MultiInsert(ctx context.Context, data interface{}, fields ...str
 
 // MultiInsertUseMap 通过map键值对切片批量创建
 //  - 注意：创建成功后不会回填主键
-//  - data：批量新增多条记录的map数据，[]map[string]interface{}类型
+//  - data：批量新增多条记录的map数据，注意map的键为数据库实际字段名而不是结构体FieldName，支持零值
 func (m *model) MultiInsertUseMap(ctx context.Context, data []map[string]interface{}) error {
 	return client.DB.WithContext(ctx).Table(m.self.TableName()).Create(data).Error
 }
@@ -290,15 +290,15 @@ func (m *model) UpdateOne(ctx context.Context, data schema.Tabler, fields ...str
 //  - 注意：model对象指定需要更新的单条记录的值，主键字段必须指定值
 //     然后通过第二个参数指定需要更新的字段<指定的字段的零值也会被更新为对应的零值>
 //  - where：查询条件 Where 结构体切片
-//  - data：更新的字段map数据，map[string]interface{}类型，支持零值更新
+//  - data：更新的字段map数据，注意map的键为数据库实际字段名而不是结构体FieldName，支持零值更新
 func (m *model) UpdateByWhere(ctx context.Context, where []Where, data map[string]interface{}) (int64, error) {
 	result := parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Updates(data)
 	return result.RowsAffected, result.Error
 }
 
-// DeleteByPrimary 通过主键字段值删除1条或多条记录
+// DeleteByPrimary 通过主键字段值硬删除1条或多条记录
 //  - 注意：model对象指定需要删除的记录的主键值
-//     gorm软删除特性需在model字段定义时使用 gorm.DeletedAt 类型的字段特性实现
+//     gorm软删除特性需在model字段定义时使用 gorm.DeletedAt 类型的字段特性实现，本model不支持软删除
 //     gorm软删除特性引入后查询条件将自动附加过滤已软删除记录的条件
 //  - primaryKey：数值类型的主键值，1个或多个
 // 	   例子1：1 单个主键
@@ -310,7 +310,7 @@ func (m *model) DeleteByPrimary(ctx context.Context, primaryKey ...interface{}) 
 	return result.RowsAffected, result.Error
 }
 
-// DeleteByWhere 通过model的主键字段删除1条记录
+// DeleteByWhere 通过model的主键字段硬删除1条记录
 //  - 注意：软删除功能是一项功能特性，要么全部使用gorm的软删除特性，要么业务删除时调用update方法
 //     gorm软删除特性需在model字段定义时使用 gorm.DeletedAt 类型的字段特性实现
 //     gorm软删除特性引入后查询条件将自动附加过滤已软删除记录的条件，无需手动指定
