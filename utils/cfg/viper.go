@@ -1,9 +1,9 @@
 package cfg
 
 import (
+	"bytes"
 	"github.com/spf13/viper"
 	"os"
-	"strings"
 )
 
 // Viper 依赖viper实现的文件模式配置解析
@@ -44,7 +44,7 @@ func (v Viper) Parse(resource interface{}, cType string, target interface{}) err
 	vip := viper.New()
 	vip.SetConfigType(cType)
 
-	if err = vip.ReadConfig(strings.NewReader(string(stream))); err != nil {
+	if err = vip.ReadConfig(bytes.NewReader(stream)); err != nil {
 		return ConfigFileParseFailed
 	}
 
