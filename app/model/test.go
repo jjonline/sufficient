@@ -9,6 +9,6 @@ type Test struct {
 }
 
 // TableName 返回表名称方法
-func (t Test) TableName() string  {
+func (t Test) TableName() string {
 	return dbPrefix() + "test"
 }

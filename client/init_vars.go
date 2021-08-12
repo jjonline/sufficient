@@ -4,6 +4,7 @@ package client
 
 import (
 	"github.com/go-redis/redis/v8"
+	"github.com/jjonline/go-lib-backend/guzzle"
 	"github.com/jjonline/go-lib-backend/logger"
 	"github.com/jjonline/go-lib-backend/memory"
 	"gorm.io/gorm"
@@ -14,4 +15,5 @@ var (
 	Redis       *redis.Client
 	DB          *gorm.DB
 	MemoryCache *memory.Cache
+	Guzzle      *guzzle.Client
 )

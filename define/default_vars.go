@@ -6,4 +6,3 @@ var (
 	DefaultLogPath  = "stdout" // 默认日志路径
 	DefaultLogLevel = "debug"  // 默认日志级别
 )
-
