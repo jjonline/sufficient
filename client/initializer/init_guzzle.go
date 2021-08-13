@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+//go:noinline
 func initGuzzle() *guzzle.Client {
 	return guzzle.New(&http.Client{
 		Timeout: 10 * time.Second,

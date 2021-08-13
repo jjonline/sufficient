@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+//go:noinline
 func initRedis() *redis.Client {
 	cnf := conf.Config.Redis
 	r := redis.NewClient(&redis.Options{

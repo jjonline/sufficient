@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//go:noinline
 func initDB() *gorm.DB {
 	c := conf.Config.Database
 
