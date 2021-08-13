@@ -12,6 +12,6 @@ type redis struct {
 	PoolMaxIdle     int    `json:"pool_max_idle"`
 	PoolMaxOpen     int    `json:"pool_max_open"`
 	PoolMaxTime     int    `json:"pool_max_time"`
-	QueueConcurrent int    `json:"queue_concurrent"`
+	QueueConcurrent int64  `json:"queue_concurrent"`
 	QueueWarnNum    int64  `json:"queue_warn_num"`
 }

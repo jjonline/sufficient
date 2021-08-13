@@ -16,6 +16,8 @@ import (
 	"time"
 )
 
+// region 服务引导启动器
+
 // BootStrap 引导启动
 func BootStrap() {
 	// output base info
@@ -28,6 +30,7 @@ func BootStrap() {
 
 	// 仅启动队列
 	if conf.Cmd.OnlyQueue {
+		startQueue(signalChan)
 		return
 	}
 
@@ -38,15 +41,22 @@ func BootStrap() {
 
 	// 跟随启动队列
 	if conf.Cmd.WithQueue {
-
+		if nil != client.Queue.Start() {
+			panic("queue consumer started error of panic, please check it first")
+		}
 	}
 
 	// 跟随启动定时任务
 	if conf.Cmd.WithCrontab {
 
 	}
+
 	startHttpApp(signalChan)
 }
+
+// endregion
+
+// region HttpServer启动
 
 // startHttpApp http api服务启动
 func startHttpApp(signalChan chan os.Signal) {
@@ -61,9 +71,8 @@ func startHttpApp(signalChan chan os.Signal) {
 		MaxHeaderBytes: 1 << 20, //1MB
 	}
 
-	// region main主进程阻塞channel
+	// main主进程阻塞channel
 	idleCloser := make(chan struct{})
-	// endregion
 
 	// http serv handle exit signal
 	go func() {
@@ -97,6 +106,38 @@ func startHttpApp(signalChan chan os.Signal) {
 	client.Logger.Info("进程已退出：服务已关闭")
 }
 
+// endregion
+
+// region 单独队列消费者启动
+
+// startQueue 启动队列queue消费者
+func startQueue(signalChan chan os.Signal) {
+	// 启动队列consumer
+	if nil != client.Queue.Start() {
+		panic("queue consumer started error of panic, please check it first")
+	}
+
+	// waiting for exit signal
+	<-signalChan
+
+	// 超时context
+	queueCtx, queueCancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer queueCancel()
+	// We received an interrupt signal, shut down.
+	if err := client.Queue.ShutDown(queueCtx); err != nil {
+		// Error from closing listeners, or context timeout:
+		client.Logger.Error("queue服务暴力停止：" + err.Error())
+	} else {
+		client.Logger.Info("queue服务优雅停止")
+	}
+
+	client.Logger.Info("[queue] queue processor exited")
+}
+
+// endregion
+
+// region 全局进程控制信号捕获
+
 // quitCtx 全局退出信号
 func quitCtx() (context.Context, chan os.Signal) {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -113,3 +154,5 @@ func quitCtx() (context.Context, chan os.Signal) {
 
 	return ctx, quitChan
 }
+
+// endregion

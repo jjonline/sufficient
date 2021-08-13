@@ -7,10 +7,11 @@ require (
 	github.com/go-playground/validator/v10 v10.6.1 // indirect
 	github.com/go-redis/redis/v8 v8.8.3
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/jjonline/go-lib-backend/guzzle v0.0.0-20210805065235-598160a89001
-	github.com/jjonline/go-lib-backend/logger v0.0.0-20210805065235-598160a89001
-	github.com/jjonline/go-lib-backend/memory v0.0.0-20210805065235-598160a89001
-	github.com/jjonline/go-lib-backend/migrate v0.0.0-20210805065235-598160a89001
+	github.com/jjonline/go-lib-backend/guzzle v0.0.0-20210813032146-d7657b946448
+	github.com/jjonline/go-lib-backend/logger v0.0.0-20210813032146-d7657b946448
+	github.com/jjonline/go-lib-backend/memory v0.0.0-20210813032146-d7657b946448
+	github.com/jjonline/go-lib-backend/migrate v0.0.0-20210813032146-d7657b946448
+	github.com/jjonline/go-lib-backend/queue v0.0.0-20210813032146-d7657b946448
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/spf13/cobra v1.2.1

@@ -12,6 +12,7 @@ func Init() {
 	client.DB = initDB()                   // 初始化db
 	client.MemoryCache = initMemoryCache() // 初始化内存缓存
 	client.Guzzle = initGuzzle()           // 初始化通用http客户端
+	client.Queue = initQueue()             // 初始化队列
 }
 
 // endregion
