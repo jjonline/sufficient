@@ -236,8 +236,10 @@ func (m *model) Paginate(ctx context.Context, where []Where, target interface{},
 	}
 
 	// calc total count
-	_ = parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Count(targetTotal).Error
-
+	err = parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Count(targetTotal).Error
+	if err != nil {
+		return
+	}
 	if orderBy == "" {
 		return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Offset(offset).Limit(limit).Select(fields).Find(target).Error
 	}
