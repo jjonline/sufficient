@@ -138,8 +138,8 @@ func (m *model) FindByWhere(ctx context.Context, where []Where, target schema.Ta
 	return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Select(fields).First(target).Error
 }
 
-// CountByWhere 分页查询，按where条件分页查询获取分页列表数和总记录数
-//  - 查询不到记录返回返回0和空切片
+// CountByWhere 按where条件统计记录总数
+//  - 查询不到记录返回返回0
 //  - where：查询条件 Where 结构体切片
 //  - targetTotal：查询结果集总条数指针引用
 func (m *model) CountByWhere(ctx context.Context, where []Where, targetTotal *int64) (err error) {
