@@ -163,9 +163,9 @@ func (m *model) CountByWhere(ctx context.Context, where []Where, targetTotal *in
 //	   []string{"name", "sex"}...
 func (m *model) ListByWhere(ctx context.Context, where []Where, target interface{}, orderBy string, fields ...string) (err error) {
 	if orderBy == "" {
-		return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Select(fields).Take(target).Error
+		return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Select(fields).Find(target).Error
 	}
-	return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Select(fields).Order(orderBy).Take(target).Error
+	return parseWhere(client.DB.WithContext(ctx).Table(m.self.TableName()), where).Select(fields).Order(orderBy).Find(target).Error
 }
 
 // ListByOriginWhere 按gorm原始where查询多条确认数量有限的列表记录
@@ -192,9 +192,9 @@ func (m *model) ListByWhere(ctx context.Context, where []Where, target interface
 //     err := tbModel.ListByOriginWhere(ctx, gg, &target, "id")
 func (m *model) ListByOriginWhere(ctx context.Context, originWhere *gorm.DB, target interface{}, orderBy string, fields ...string) (err error) {
 	if orderBy == "" {
-		return client.DB.WithContext(ctx).Table(m.self.TableName()).Where(originWhere).Select(fields).Take(target).Error
+		return client.DB.WithContext(ctx).Table(m.self.TableName()).Where(originWhere).Select(fields).Find(target).Error
 	}
-	return client.DB.WithContext(ctx).Table(m.self.TableName()).Where(originWhere).Select(fields).Order(orderBy).Take(target).Error
+	return client.DB.WithContext(ctx).Table(m.self.TableName()).Where(originWhere).Select(fields).Order(orderBy).Find(target).Error
 }
 
 // Columns 获取列数据
