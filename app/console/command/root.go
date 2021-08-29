@@ -2,10 +2,10 @@ package command
 
 import (
 	"fmt"
-	"github.com/jjonline/golang-backend/app/console"
-	"github.com/jjonline/golang-backend/client/initializer"
-	"github.com/jjonline/golang-backend/conf"
-	"github.com/jjonline/golang-backend/define"
+	"github.com/jjonline/sufficient/app/console"
+	"github.com/jjonline/sufficient/client/initializer"
+	"github.com/jjonline/sufficient/conf"
+	"github.com/jjonline/sufficient/define"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -13,9 +13,9 @@ import (
 // RootCmd 基于cobra的命令行根节点定义
 var (
 	RootCmd = &cobra.Command{
-		Use:   "golang-backend [sub]",
-		Short: "golang-backend服务管理",
-		Long: `golang-backend服务管理，源码模式下参数样例如下:
+		Use:   "sufficient [sub]",
+		Short: "sufficient服务管理",
+		Long: `sufficient服务管理，源码模式下参数样例如下:
 ----------------------------------------------------------------------
 go run main.go               仅启动基础api服务
 go run main.go --withQueue   启动基础api服务的同时启动队列消费者服务

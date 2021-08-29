@@ -2,7 +2,7 @@ package utils
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/conf"
 )
 
 // config.Server.env配置项可选枚举值

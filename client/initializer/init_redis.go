@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/jjonline/go-lib-backend/logger"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/conf"
 	"runtime"
 	"time"
 )

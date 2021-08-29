@@ -3,7 +3,7 @@ package route
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jjonline/go-lib-backend/logger"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/conf"
 )
 
 // router 包内路由变量，请勿覆盖

@@ -3,7 +3,7 @@ package memory
 import (
 	"fmt"
 	memCache "github.com/jjonline/go-lib-backend/memory"
-	"github.com/jjonline/golang-backend/client"
+	"github.com/jjonline/sufficient/client"
 	"reflect"
 	"time"
 )

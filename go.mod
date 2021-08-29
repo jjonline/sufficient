@@ -1,4 +1,4 @@
-module github.com/jjonline/golang-backend
+module github.com/jjonline/sufficient
 
 go 1.16
 

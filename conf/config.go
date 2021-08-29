@@ -1,8 +1,8 @@
 package conf
 
 import (
-	"github.com/jjonline/golang-backend/define"
-	"github.com/jjonline/golang-backend/utils/cfg"
+	"github.com/jjonline/sufficient/define"
+	"github.com/jjonline/sufficient/utils/cfg"
 )
 
 // 项目config配置定义

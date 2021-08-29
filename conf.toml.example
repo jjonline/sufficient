@@ -1,6 +1,6 @@
 [Server]
-Env="dev、test、prod"
-Version="0.0.1"
+Env=""
+Version=""
 Port=9080
 ReadTimeout=30
 WriteTimeout=30
@@ -36,5 +36,5 @@ PoolMaxOpen=10
 PoolMaxTime=1800
 
 [Queue]
-Driver="memory、redis、database"
+Driver=""
 Concurrent=5

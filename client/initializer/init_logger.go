@@ -2,7 +2,7 @@ package initializer
 
 import (
 	"github.com/jjonline/go-lib-backend/logger"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/conf"
 )
 
 //go:noinline

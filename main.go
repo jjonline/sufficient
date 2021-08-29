@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jjonline/golang-backend/app/console/command"
+	"github.com/jjonline/sufficient/app/console/command"
 	_ "go.uber.org/automaxprocs"
 )
 

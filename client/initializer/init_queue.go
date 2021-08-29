@@ -2,9 +2,9 @@ package initializer
 
 import (
 	"github.com/jjonline/go-lib-backend/queue"
-	"github.com/jjonline/golang-backend/app/console/jobs"
-	"github.com/jjonline/golang-backend/client"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/app/console/jobs"
+	"github.com/jjonline/sufficient/client"
+	"github.com/jjonline/sufficient/conf"
 )
 
 //go:noinline

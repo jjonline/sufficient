@@ -3,8 +3,8 @@ package command
 import (
 	"fmt"
 	"github.com/jjonline/go-lib-backend/migrate"
-	"github.com/jjonline/golang-backend/client"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/client"
+	"github.com/jjonline/sufficient/conf"
 	"github.com/spf13/cobra"
 )
 

@@ -3,7 +3,7 @@ package initializer
 import (
 	"fmt"
 	"github.com/jjonline/go-lib-backend/logger"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"

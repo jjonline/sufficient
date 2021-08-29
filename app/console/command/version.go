@@ -2,7 +2,7 @@ package command
 
 import (
 	"fmt"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/conf"
 	"github.com/spf13/cobra"
 )
 

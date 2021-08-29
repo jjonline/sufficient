@@ -1,6 +1,6 @@
-# golang-backend
+# sufficient
 
-golang服务端开发组件
+日常开发过程中提炼封装的go语言开发框架，自带通用管理后台实现
 
 ## 一、项目描述
 

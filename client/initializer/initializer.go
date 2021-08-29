@@ -1,6 +1,6 @@
 package initializer
 
-import "github.com/jjonline/golang-backend/client"
+import "github.com/jjonline/sufficient/client"
 
 // region 全局句柄初始化相关
 

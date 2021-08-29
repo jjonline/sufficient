@@ -3,8 +3,8 @@ package model
 import (
 	"context"
 	"fmt"
-	"github.com/jjonline/golang-backend/client"
-	"github.com/jjonline/golang-backend/conf"
+	"github.com/jjonline/sufficient/client"
+	"github.com/jjonline/sufficient/conf"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )

@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// 通用entry结构封装
+
 // PageReq 分页通用请求参数
 type PageReq struct {
 	// 通用参数--第几页
