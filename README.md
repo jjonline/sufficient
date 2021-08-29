@@ -34,7 +34,7 @@
 
 ### 1、环境准备
 
-* 安装go最新稳定版本（>=1.15），设置好`GOROOT`、`GOPATH`环境变量，确保`go`命令可用
+* 安装go最新稳定版本（>=1.16），设置好`GOROOT`、`GOPATH`环境变量，确保`go`命令可用
 * 安装工具`stringer`、`swagger`、`golint`
 
 ````
