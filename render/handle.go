@@ -25,7 +25,7 @@ func H(code int, msg string, data interface{}) gin.H {
 
 // S gin成功响应
 func S(ctx *gin.Context, data interface{}) {
-	res := H(SuccessCode, "success", data)
+	res := H(SuccessCode, "ok", data)
 	ctx.JSON(http.StatusOK, res)
 }
 
