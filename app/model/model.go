@@ -33,7 +33,6 @@ type BaseField struct {
 	ID        uint `gorm:"primaryKey"`
 	CreatedAt uint `gorm:"autoCreateTime"`
 	UpdatedAt uint `gorm:"autoCreateTime,autoUpdateTime"`
-	DeletedAt uint
 }
 
 // dbPrefix 统一表前缀

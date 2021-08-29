@@ -11,6 +11,7 @@ var (
 	RoleModel        Role
 	ManagerDeptModel ManagerDept
 	ManagerRoleModel ManagerRole
+	ManagerOpenModel ManagerOpen
 	MenuRouteModel   MenuRoute
 	RoleMenuModel    RoleMenu
 )
@@ -23,6 +24,7 @@ func init() {
 	RoleModel.model.construct(&RoleModel)
 	ManagerDeptModel.model.construct(&ManagerDeptModel)
 	ManagerRoleModel.model.construct(&ManagerRoleModel)
+	ManagerOpenModel.model.construct(&ManagerOpenModel)
 	MenuRouteModel.model.construct(&MenuRouteModel)
 	RoleMenuModel.model.construct(&RoleMenuModel)
 }
