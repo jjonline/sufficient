@@ -8,7 +8,7 @@
 
 ## 二、项目结构
 
-项目目录树和介绍如下：
+项目核心目录树和介绍如下：
 
 ````
 ├── app                App应用目录
@@ -22,6 +22,7 @@
 ├── client             全局句柄客户端
 ├── conf               全局配置
 ├── define             全局常量变量
+├── extend             扩展功能集
 ├── migrations         数据库迁移文件
 ├── render             渲染器
 ├── route              路由
@@ -140,7 +141,7 @@ docker create --name yy-doc -p 7071:7071 \
 * `utils/memory`目录下封装有本地内存缓存的设置、获取等方法
 * 其他缓存及分布式锁可使用redis
 * 本地内存缓存重启即丢失需重建，但速度优于redis缓存，酌情使用
-* 多实例部署时本地内存缓存同步清理通过redis的subscribe机制实现，参考`app/exntend`目录
+* 多实例部署时本地内存缓存同步清理通过redis的subscribe机制实现，参考`extend/subscrible`目录
 
 > 注意：本地内存缓存的过期清理是10分钟1次，请勿精确依赖本地内存缓存的过期时间
 

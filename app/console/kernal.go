@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jjonline/go-lib-backend/logger"
 	"github.com/jjonline/sufficient/client"
 	"github.com/jjonline/sufficient/conf"
+	"github.com/jjonline/sufficient/extend/subscribe"
 	"github.com/jjonline/sufficient/route"
 	"github.com/jjonline/sufficient/utils"
 	"net/http"
@@ -25,6 +27,9 @@ func BootStrap() {
 	client.Logger.Info(fmt.Sprintf("MAX Cpu Num     : %d", runtime.GOMAXPROCS(-1)))
 	client.Logger.Info(fmt.Sprintf("Command Args    : %s", os.Args))
 	client.Logger.Info(fmt.Sprintf("Log Path        : %s", conf.Config.Log.Path))
+
+	// start redis-subscribe-sub-manager
+	subscribe.New().Start()
 
 	_, signalChan := quitCtx()
 
@@ -62,6 +67,10 @@ func BootStrap() {
 func startHTTPApp(signalChan chan os.Signal) {
 	// 设置gin启动模式
 	gin.SetMode(utils.RunMode())
+
+	// 设置gin路由注册日志输出func
+	// 注意：gin路由注册日志输出仅dev模式才有
+	gin.DebugPrintRouteFunc = logger.GinPrintInitRoute
 
 	server := &http.Server{
 		Addr:           fmt.Sprintf(":%d", conf.Config.Server.Port),
