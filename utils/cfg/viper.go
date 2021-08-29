@@ -16,7 +16,7 @@ type Viper struct{}
 //  - @param target   解析结果集引用（struct pointer）
 func (v Viper) Parse(resource interface{}, cType string, target interface{}) error {
 	if !IsCfgTypeSupport(cType) {
-		return ConfigTypeNotSupport
+		return ErrConfigTypeNotSupport
 	}
 
 	var stream []byte
@@ -27,17 +27,17 @@ func (v Viper) Parse(resource interface{}, cType string, target interface{}) err
 		// file dir for check file exist
 		filePath := resource.(string)
 		if !IsFileExist(filePath) {
-			return ConfigFileNotExist
+			return ErrConfigFileNotExist
 		}
 
 		stream, err = os.ReadFile(filePath)
 		if err != nil {
-			return ConfigFileParseFailed
+			return ErrConfigFileParseFailed
 		}
 	case []byte:
 		stream = resource.([]byte)
 	default:
-		return ConfigFileNotExist
+		return ErrConfigFileNotExist
 	}
 
 	// use viper parse
@@ -45,7 +45,7 @@ func (v Viper) Parse(resource interface{}, cType string, target interface{}) err
 	vip.SetConfigType(cType)
 
 	if err = vip.ReadConfig(bytes.NewReader(stream)); err != nil {
-		return ConfigFileParseFailed
+		return ErrConfigFileParseFailed
 	}
 
 	// set config value

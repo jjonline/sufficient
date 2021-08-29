@@ -51,15 +51,15 @@ func BootStrap() {
 
 	}
 
-	startHttpApp(signalChan)
+	startHTTPApp(signalChan)
 }
 
 // endregion
 
 // region HttpServer启动
 
-// startHttpApp http api服务启动
-func startHttpApp(signalChan chan os.Signal) {
+// startHTTPApp http api服务启动
+func startHTTPApp(signalChan chan os.Signal) {
 	// 设置gin启动模式
 	gin.SetMode(utils.RunMode())
 

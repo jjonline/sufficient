@@ -11,6 +11,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// 全局使用的句柄变量--client
+//  ① 项目启动就要初始化的全局变量句柄
+//  ② 按client包规则书写
 var (
 	Logger      *logger.Logger // 基于zap的日志记录器
 	Redis       *redis.Client  // redis客户端

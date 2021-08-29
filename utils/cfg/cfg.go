@@ -8,7 +8,7 @@ import (
 // 支持的配置文件类型常量定义
 const (
 	TypeToml       = "toml"
-	TypeJson       = "json"
+	TypeJSON       = "json"
 	TypeIni        = "ini"
 	TypeYaml       = "yaml"
 	TypeYml        = "yml"
@@ -22,7 +22,7 @@ const (
 // supportType 支持的配置文件类型
 var supportType = []string{
 	TypeToml,
-	TypeJson,
+	TypeJSON,
 	TypeIni,
 	TypeYaml,
 	TypeYml,
@@ -33,14 +33,14 @@ var supportType = []string{
 	TypeEnv,
 }
 
-// ConfigTypeNotSupport 配置类型不支持错误
-var ConfigTypeNotSupport = errors.New("config file type do not support")
+// ErrConfigTypeNotSupport 配置类型不支持错误
+var ErrConfigTypeNotSupport = errors.New("config file type do not support")
 
-// ConfigFileNotExist 配置文件不存在错误
-var ConfigFileNotExist = errors.New("config file do not exist")
+// ErrConfigFileNotExist 配置文件不存在错误
+var ErrConfigFileNotExist = errors.New("config file do not exist")
 
-// ConfigFileParseFailed 配置文件解析错误
-var ConfigFileParseFailed = errors.New("config file parse failed")
+// ErrConfigFileParseFailed 配置文件解析错误
+var ErrConfigFileParseFailed = errors.New("config file parse failed")
 
 // IFace config读取分析载入类
 type IFace interface {
