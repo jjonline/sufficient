@@ -10,6 +10,7 @@ import (
 //  - 一般扩展路由是基于该变量链式添加，为了识别可将固定前缀的路由拆分文件
 var router *gin.Engine
 
+// iniRoute 路由init-logger、recovery、cors 等
 func iniRoute() {
 	router = gin.New()
 	router.AppEngine = true // 启用AppEngine模式; nginx反代通过`X-Appengine-Remote-Addr`头透传客户端真实IP
@@ -24,5 +25,6 @@ func iniRoute() {
 // Bootstrap 引导初始化路由route
 func Bootstrap() *gin.Engine {
 	iniRoute()
+	manageRoute() // 管理后台路由
 	return router
 }

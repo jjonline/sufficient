@@ -27,7 +27,7 @@
 ├── route              路由
 ├── utils              utils帮助类
 ├── conf.toml.example  配置文件样例
-└──  main.go           main包入口
+└── main.go            main包入口
 ````
 ## 三、项目约定
 
