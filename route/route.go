@@ -20,6 +20,9 @@ func iniRoute() {
 	if conf.Config.Server.Cors {
 		router.Use(logger.GinCors)
 	}
+
+	// 请求找不到路由时输出错误
+	router.NoRoute(notRoute)
 }
 
 // Bootstrap 引导初始化路由route

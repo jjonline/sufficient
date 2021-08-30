@@ -2,11 +2,14 @@ package render
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
+	"github.com/go-playground/validator/v10"
 	"github.com/go-redis/redis/v8"
 	"github.com/jjonline/go-lib-backend/logger"
 	"gorm.io/gorm"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
@@ -31,7 +34,7 @@ func S(ctx *gin.Context, data interface{}) {
 
 // F gin失败响应--接管错误处理
 func F(ctx *gin.Context, err error) {
-	eErr := handle(err)
+	eErr := translateError(err)
 	// 记录错误日志
 	LogErrWithGin(ctx, eErr, false)
 	res := H(eErr.Code(), eErr.Format(), nil)
@@ -48,8 +51,8 @@ func LogErrWithGin(ctx *gin.Context, err error, isAlert bool) {
 	logger.GinLogHttpFail(ctx, err)
 }
 
-// handle 错误处理
-func handle(err error) E {
+// translateError 默认错误翻译
+func translateError(err error) E {
 	if errors.Is(err, gorm.ErrRecordNotFound) || errors.Is(err, sql.ErrNoRows) {
 		// gorm 数据不存在错误
 		return DbRecordNotExist.Wrap(err)
@@ -62,17 +65,28 @@ func handle(err error) E {
 
 	switch e := err.(type) {
 	case *mysql.MySQLError:
-		// mysql错误
-		return DbError.Wrap(e)
+		return DbError.Wrap(e) // mysql错误
 	case redis.Error:
 		// redis错误
 		return RedisError.Wrap(err)
+	case *validator.InvalidValidationError:
+		return ErrDefineWithMsg.Wrap(err, "内部错误：参数绑定条件语法错误") // 需要修改参数结构体的tag为binding条件
+	case validator.ValidationErrors:
+		return ErrDefineWithMsg.Wrap(err, "参数错误：参数值未满足限定条件")
+	case *json.UnmarshalTypeError:
+		return ErrDefineWithMsg.Wrap(err, "参数错误：参数值类型不符")
+	case *strconv.NumError:
+		if e.Func == "ParseBool" {
+			return ErrDefineWithMsg.Wrap(err, "参数错误：限定传参布尔值")
+		}
+		return ErrDefineWithMsg.Wrap(err, "参数错误：数值范围超过限定类型界限")
 	case CE:
 		return e.Wrap(nil)
 	case E:
 		return e
+	default:
+		return UnknownError.Wrap(err)
 	}
-	return UnknownError.Wrap(err)
 }
 
 // region 检查连接断开导致异常方法

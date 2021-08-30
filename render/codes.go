@@ -15,4 +15,5 @@ const (
 	InvalidRequest   CE = 101002 // 请求错误
 	SystemBusy       CE = 101003 // 系统繁忙请稍后再试
 	DbRecordNotExist CE = 101404 // 数据不存在
+	ErrDefineWithMsg CE = 101405 // %s
 )
