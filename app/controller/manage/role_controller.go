@@ -14,7 +14,7 @@ type roleController struct{}
 //
 // 提交创建角色数据
 //     Responses:
-// 		 default: ErrorRes
+//       default: ErrorRes
 //       200: BoolRes
 func (m *roleController) Create(ctx *gin.Context) {
 	var req entry.CreateDeptReq

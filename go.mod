@@ -4,14 +4,14 @@ go 1.16
 
 require (
 	github.com/gin-gonic/gin v1.7.2
-	github.com/go-playground/validator/v10 v10.6.1 // indirect
+	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis/v8 v8.8.3
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/jjonline/go-lib-backend/guzzle v0.0.0-20210829073034-cc4e869d4cc0
-	github.com/jjonline/go-lib-backend/logger v0.0.0-20210829073034-cc4e869d4cc0
-	github.com/jjonline/go-lib-backend/memory v0.0.0-20210829073034-cc4e869d4cc0
-	github.com/jjonline/go-lib-backend/migrate v0.0.0-20210829073034-cc4e869d4cc0
-	github.com/jjonline/go-lib-backend/queue v0.0.0-20210829073034-cc4e869d4cc0
+	github.com/jjonline/go-lib-backend/guzzle v0.0.0-20210830064902-f97a3cab7770
+	github.com/jjonline/go-lib-backend/logger v0.0.0-20210830064902-f97a3cab7770
+	github.com/jjonline/go-lib-backend/memory v0.0.0-20210830064902-f97a3cab7770
+	github.com/jjonline/go-lib-backend/migrate v0.0.0-20210830064902-f97a3cab7770
+	github.com/jjonline/go-lib-backend/queue v0.0.0-20210830064902-f97a3cab7770
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/spf13/cobra v1.2.1
