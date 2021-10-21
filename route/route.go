@@ -16,7 +16,7 @@ func iniRoute() {
 	router.AppEngine = true // 启用AppEngine模式; nginx反代通过`X-Appengine-Remote-Addr`头透传客户端真实IP
 
 	// set base middleware
-	router.Use(logger.GinLogger, logger.GinRecovery)
+	router.Use(logger.GinLogger(nil), logger.GinRecovery)
 	if conf.Config.Server.Cors {
 		router.Use(logger.GinCors)
 	}
